@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class EnvironmentGenerator : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class EnvironmentGenerator : MonoBehaviour
     public GameObject bankPrefab;
     public GameObject agentPrefab;
     public GameObject housePrefab;
+    public GameObject ATMlogo;
     private GameObject groundObject;
     public static TextAsset environmentData;
 
@@ -42,7 +44,12 @@ public class EnvironmentGenerator : MonoBehaviour
                         Instantiate(wallPrefab, position, Quaternion.identity);
                         break;
                     case 'B':
+                        Vector3 positionLogo = position + new Vector3(0, 0.61f, 0.2f);
+                        position += new Vector3(0, -0.5f, 0);
                         GameObject bank = Instantiate(bankPrefab, position, Quaternion.identity);
+                        GameObject atmlogo = Instantiate(ATMlogo, positionLogo, Quaternion.identity);
+                        bank.transform.rotation = Quaternion.Euler(-90f,-90f,-90f);
+                        atmlogo.transform.rotation = Quaternion.Euler(90f,0,0);
                         bank.tag = "Bank";
                         break;
                     case '0':

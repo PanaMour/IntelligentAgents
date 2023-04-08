@@ -452,7 +452,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11dc25b0e72fe934499a09b456ad77ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agents: []
 --- !u!4 &1259819022
 Transform:
   m_ObjectHideFlags: 0
@@ -502,7 +501,7 @@ MonoBehaviour:
     type: 3}
   wallPrefab: {fileID: 3232564120067614096, guid: 6ed1436f3e0b27942ba4d0306bd9e734,
     type: 3}
-  bankPrefab: {fileID: 3232564120067614096, guid: ea4460416c48af947a8c7082fe62071f,
+  bankPrefab: {fileID: 354552205459613115, guid: d5adaa23f4c61a54fa2aea837036c735,
     type: 3}
   agentPrefab: {fileID: 2168412071976945609, guid: 4a1b258bbc987f04197b0120485535b1,
     type: 3}
