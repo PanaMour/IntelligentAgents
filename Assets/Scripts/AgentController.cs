@@ -11,10 +11,12 @@ public class AgentController : MonoBehaviour
     public string planFileName;
     private Vector2Int currentPosition;
     private Vector2Int nextPosition;
-   [SerializeField] private string[] plan;
+    [SerializeField] private string[] plan;
     private int currentBuildingIndex = 0;
     private bool exploring = true;
     [SerializeField]TextAsset planData;
+    private string environmentTextFile = "environment";
+    [SerializeField] private GridBlock[,] grid;
     private void Start()
     {
         // Read the plan from the text file with the given filename
@@ -27,7 +29,33 @@ public class AgentController : MonoBehaviour
         }
         // Set the current position of the agent based on its initial position in the grid
         currentPosition = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(-transform.position.z));
+
+        TextAsset environmentData = Resources.Load<TextAsset>(environmentTextFile);
+        InitializeGrid(environmentData.text);
+
+        grid[Mathf.RoundToInt(transform.position.x),Mathf.RoundToInt(-transform.position.z)].discovered = true;
+        Debug.Log("2, 7" + grid[2, 7].discovered);
     }
+    private void InitializeGrid(string environmentText)
+    {
+        string[] lines = environmentText.Split('\n');
+        int numRows = lines.Length;
+        int numCols = lines[0].Length - 1; // Subtract 1 for the newline character
+        grid = new GridBlock[numRows, numCols];
+        for (int i = 0; i < numRows; i++)
+        {
+            for (int j = 0; j < numCols; j++)
+            {
+                GridBlock block = new GridBlock();
+                block.symbol = lines[i][j].ToString();
+                block.x = i;
+                block.y = -j;
+                block.discovered = false;
+                grid[i, j] = block;
+            }
+        }
+    }
+
 
     private void Update()
     {
