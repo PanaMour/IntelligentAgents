@@ -9,14 +9,16 @@ public class AgentController : MonoBehaviour
     public float energy = 100f;
     public GameObject house;
     public string planFileName;
-    private Vector2Int currentPosition;
+    private Node currentPosition;
     private Vector2Int nextPosition;
     [SerializeField] private string[] plan;
+    Node currentDestination;
     private int currentBuildingIndex = 0;
     private bool exploring = true;
     [SerializeField]TextAsset planData;
     private string environmentTextFile = "environment";
     [SerializeField] private Grid grid;
+    List<Node> currentPath;
     private void Start()
     {
         // Read the plan from the text file with the given filename
@@ -28,21 +30,35 @@ public class AgentController : MonoBehaviour
             plan = planData.text.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.RemoveEmptyEntries);
         }
         // Set the current position of the agent based on its initial position in the grid
-        currentPosition = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(-transform.position.z));
+        currentPosition = new Node(" ",Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(-transform.position.z));
 
         TextAsset environmentData = Resources.Load<TextAsset>(environmentTextFile);
         grid = new Grid(environmentData.text);
+        Vector2Int nextBuildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
+        string building = plan[currentBuildingIndex];
+        string[] buildingInfo = building.Split();
+        string buildingIdentifier = buildingInfo[buildingInfo.Length - 1];
+        currentDestination = new Node(buildingIdentifier, nextBuildingPosition.x, nextBuildingPosition.y);
+        currentPath = Pathfinding.FindPath(grid, currentPosition, currentDestination);
         
+    }
+
+    private IEnumerator Movement()
+    {
+        foreach (Node n in currentPath) {
+            transform.position = new Vector3(currentPosition.x, transform.position.y, -currentPosition.y);
+            yield return new WaitForSeconds(2.0f);
+        }
     }
 
 
     private void Update()
     {
-        // Check if the agent has run out of energy and destroy it if so
+        /*// Check if the agent has run out of energy and destroy it if so
         if (energy <= 0)
         {
-            /*Destroy(gameObject);
-            return;*/
+            *//*Destroy(gameObject);
+            return;*//*
         }
 
         // If the agent is exploring, try to move to a neighboring block that has not been visited
@@ -58,8 +74,8 @@ public class AgentController : MonoBehaviour
                 exploring = false;
                 currentBuildingIndex = 0;
                 nextPosition = new Vector2Int(Mathf.RoundToInt(house.transform.position.x), Mathf.RoundToInt(-house.transform.position.z));
-            }
-        }
+            }*/
+        /*}
         // Otherwise, move to the next block in the plan
         else
         {
@@ -92,7 +108,7 @@ public class AgentController : MonoBehaviour
         {
             energy--;
             currentPosition = nextPosition;
-        }
+        }*/
     }
 
     // Get the position of a building in the grid based on its index in the plan

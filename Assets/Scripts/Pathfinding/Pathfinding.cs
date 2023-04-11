@@ -31,9 +31,11 @@ public class Pathfinding
             {
                 return RetracePath(startNode, endNode);
             }
-
-            foreach (Node neighbour in grid.GetNeighbours(node))
+            List<Node> neighs = grid.GetNeighbours(node);
+            Debug.Log("DONE");
+            foreach (Node neighbour in neighs)
             {
+         
                 if (!neighbour.walkable || closedSet.Contains(neighbour))
                 {
                     continue;

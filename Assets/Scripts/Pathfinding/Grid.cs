@@ -34,8 +34,12 @@ public class Grid
     public List<Node> GetNeighbours(Node node)
     {
         List<Node> neighbours = new List<Node>();
-        if (node.x + 1 < sizeX) neighbours.Add(grid[node.x + 1, node.y]);
-        if (node.y + 1 < sizeY) neighbours.Add(grid[node.x, node.y + 1]);
+        Debug.Log("X "+node.x);
+        Debug.Log("Y "+node.y);
+        Debug.Log("SizeX "+sizeX);
+        Debug.Log("SizeY "+sizeY);
+        if (node.x + 1 < sizeX-1) neighbours.Add(grid[node.x + 1, node.y]);
+        if (node.y + 1 < sizeY-1) neighbours.Add(grid[node.x, node.y + 1]);
         if (node.x - 1 >= 0) neighbours.Add(grid[node.x - 1, node.y]);
         if (node.y - 1 >= 0) neighbours.Add(grid[node.x, node.y - 1]);
         return neighbours;
