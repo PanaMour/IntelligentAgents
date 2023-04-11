@@ -24,7 +24,7 @@ public class Grid
             for (int j = 0; j < sizeY; j++)
             {
                 string symbol = lines[i][j].ToString();
-                Node node = new Node(symbol, i, -j);
+                Node node = new Node(symbol, i, j);
                 grid[i, j] = node;
             }
         }
@@ -34,10 +34,9 @@ public class Grid
     public List<Node> GetNeighbours(Node node)
     {
         List<Node> neighbours = new List<Node>();
-        Debug.Log("X "+node.x);
-        Debug.Log("Y "+node.y);
-        Debug.Log("SizeX "+sizeX);
-        Debug.Log("SizeY "+sizeY);
+        Debug.Log("(X,Y) = ("+node.x + "," + node.y + ")");
+        Debug.Log("SizeX " + sizeX);
+        Debug.Log("SizeY " + sizeY);
         if (node.x + 1 < sizeX-1) neighbours.Add(grid[node.x + 1, node.y]);
         if (node.y + 1 < sizeY-1) neighbours.Add(grid[node.x, node.y + 1]);
         if (node.x - 1 >= 0) neighbours.Add(grid[node.x - 1, node.y]);

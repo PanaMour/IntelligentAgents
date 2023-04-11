@@ -18,7 +18,7 @@ public class AgentController : MonoBehaviour
     [SerializeField]TextAsset planData;
     private string environmentTextFile = "environment";
     [SerializeField] private Grid grid;
-    List<Node> currentPath;
+    [SerializeField] private List<Node> currentPath;
     private void Start()
     {
         // Read the plan from the text file with the given filename
@@ -40,11 +40,15 @@ public class AgentController : MonoBehaviour
         string buildingIdentifier = buildingInfo[buildingInfo.Length - 1];
         currentDestination = new Node(buildingIdentifier, nextBuildingPosition.x, nextBuildingPosition.y);
         currentPath = Pathfinding.FindPath(grid, currentPosition, currentDestination);
-        
+        Debug.Log(currentPosition.x + " " +currentPosition.y);
+        Debug.Log(currentDestination.x + " " + currentDestination.y);
+        Debug.Log(currentPath.Count);
+        StartCoroutine(Movement());
     }
 
     private IEnumerator Movement()
     {
+        Debug.Log("Moving");
         foreach (Node n in currentPath) {
             transform.position = new Vector3(currentPosition.x, transform.position.y, -currentPosition.y);
             yield return new WaitForSeconds(2.0f);
@@ -74,8 +78,8 @@ public class AgentController : MonoBehaviour
                 exploring = false;
                 currentBuildingIndex = 0;
                 nextPosition = new Vector2Int(Mathf.RoundToInt(house.transform.position.x), Mathf.RoundToInt(-house.transform.position.z));
-            }*/
-        /*}
+            }
+
         // Otherwise, move to the next block in the plan
         else
         {
