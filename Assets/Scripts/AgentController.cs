@@ -77,6 +77,7 @@ public class AgentController : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
                 yield return null;
             }
+            energy -= 1;
             yield return new WaitForSeconds(0.1f);
         }
         currentBuildingIndex += 1;
@@ -88,7 +89,6 @@ public class AgentController : MonoBehaviour
 
     private void FindPath()
     {
-        Debug.Log(plan.Length + " " + currentBuildingIndex);
         if (currentBuildingIndex < plan.Length)
         {
             Vector2Int nextBuildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
@@ -104,61 +104,11 @@ public class AgentController : MonoBehaviour
 
     private void Update()
     {
-        /*// Check if the agent has run out of energy and destroy it if so
         if (energy <= 0)
         {
-            *//*Destroy(gameObject);
-            return;*//*
+            Destroy(gameObject);
+            return;
         }
-
-        // If the agent is exploring, try to move to a neighboring block that has not been visited
-        if (exploring)
-        {
-            List<Vector2Int> unvisitedNeighbors = GetUnvisitedNeighbors(currentPosition);
-            if (unvisitedNeighbors.Count > 0)
-            {
-                nextPosition = unvisitedNeighbors[Random.Range(0, unvisitedNeighbors.Count)];
-            }
-            else
-            {
-                exploring = false;
-                currentBuildingIndex = 0;
-                nextPosition = new Vector2Int(Mathf.RoundToInt(house.transform.position.x), Mathf.RoundToInt(-house.transform.position.z));
-            }
-
-        // Otherwise, move to the next block in the plan
-        else
-        {
-            Vector2Int nextBuildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
-            if (nextBuildingPosition != currentPosition)
-            {
-                nextPosition = nextBuildingPosition;
-            }
-            else
-            {
-                currentBuildingIndex++;
-                if (currentBuildingIndex >= plan.Length)
-                {
-                    exploring = true;
-                }
-                else
-                {
-                    nextBuildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
-                    nextPosition = nextBuildingPosition;
-                }
-            }
-        }
-
-        // Move the agent towards the next position
-        Vector3 targetPosition = new Vector3(nextPosition.x, transform.position.y, -nextPosition.y);
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
-
-        // Consume energy when the agent moves to a new block
-        if (currentPosition != nextPosition)
-        {
-            energy--;
-            currentPosition = nextPosition;
-        }*/
     }
 
     // Get the position of a building in the grid based on its index in the plan
@@ -203,55 +153,6 @@ public class AgentController : MonoBehaviour
             return Vector2Int.zero;
         }
     }
-
-
-
-    // Get a list of unvisited neighboring blocks
-    private List<Vector2Int> GetUnvisitedNeighbors(Vector2Int position)
-    {
-        List<Vector2Int> neighbors = new List<Vector2Int>();
-        int x = position.x;
-        int y = position.y;
-        if (IsValidPosition(x - 1, y) && !IsVisited(x - 1, y))
-        {
-            neighbors.Add(new Vector2Int(x - 1, y));
-        }
-        if (IsValidPosition(x + 1, y) && !IsVisited(x + 1, y))
-        {
-            neighbors.Add(new Vector2Int(x + 1, y));
-        }
-        if (IsValidPosition(x, y - 1) && !IsVisited(x, y - 1))
-        {
-            neighbors.Add(new Vector2Int(x, y - 1));
-        }
-        if (IsValidPosition(x, y + 1) && !IsVisited(x, y + 1))
-        {
-            neighbors.Add(new Vector2Int(x, y + 1));
-        }
-        return neighbors;
-    }
-
-    // Check if a block at the given position has been visited by the agent
-    private bool IsVisited(int x, int y)
-    {
-        Collider[] colliders = Physics.OverlapBox(new UnityEngine.Vector3(x, 0.5f, -y), new UnityEngine.Vector3(0.5f, 0.5f, 0.5f));
-        foreach (Collider collider in colliders)
-        {
-            if (collider.gameObject.CompareTag("Agent"))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // Check if a position is valid in the grid
-    private bool IsValidPosition(int x, int y)
-    {
-        string[] lines = EnvironmentGenerator.environmentData.text.Split('\n');
-        return x >= 0 && x < lines[0].Length && y >= 0 && y < lines.Length && lines[y][x] != '*';
-    }
-
     // Bind the agent to a house
     public void SetHouse(GameObject house)
     {
