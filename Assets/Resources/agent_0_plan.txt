@@ -1,1 +1,3 @@
-agent number 0 building B
+BEGINPLAN agent number 0
+building B
+ENDPLAN

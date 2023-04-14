@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.FullSerializer;
@@ -8,7 +9,7 @@ public class Pathfinding
     public static List<Node> FindPath(Grid grid, Node startNode, Node endNode)
     {
         List<Node> path = new List<Node>();
-
+        int myInt;
         List<Node> openSet = new List<Node>();
         HashSet<Node> closedSet = new HashSet<Node>();
         openSet.Add(startNode);
@@ -31,9 +32,13 @@ public class Pathfinding
             List<Node> neighs = grid.GetNeighbours(node);
             foreach (Node neighbour in neighs)
             {
-                if(neighbour==endNode)
+                if(neighbour==endNode && int.TryParse(neighbour.symbol, out myInt))
                 {
-                    //endNode.parent = node;
+                    endNode.parent = node;
+                    return RetracePath(startNode, endNode);
+                }
+                else if(neighbour == endNode)
+                {
                     return RetracePath(startNode, node);
                 }
          
