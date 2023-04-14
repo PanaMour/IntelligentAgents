@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class Pathfinding
@@ -27,21 +28,21 @@ public class Pathfinding
             openSet.Remove(node);
             closedSet.Add(node);
 
-            if (node == endNode)
-            {
-                return RetracePath(startNode, endNode);
-            }
             List<Node> neighs = grid.GetNeighbours(node);
-            Debug.Log("DONE");
             foreach (Node neighbour in neighs)
             {
+                if(neighbour==endNode)
+                {
+                    //endNode.parent = node;
+                    return RetracePath(startNode, node);
+                }
          
                 if (!neighbour.walkable || closedSet.Contains(neighbour))
                 {
                     continue;
                 }
 
-                int newCostToNeighbour = node.gCost + GetDistance(node, neighbour);
+                float newCostToNeighbour = node.gCost + GetDistance(node, neighbour);
                 if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
                 {
                     neighbour.gCost = newCostToNeighbour;
@@ -74,6 +75,6 @@ public class Pathfinding
 
     static int GetDistance(Node a, Node b)
     {
-        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+        return 10*Mathf.Abs(a.x - b.x) + 10*Mathf.Abs(a.y - b.y);
     }
 }

@@ -10,7 +10,7 @@ public class Node
     public string symbol;
     public bool discovered;
 
-    public int gCost;
+    public float gCost;
     public int hCost;
     public Node parent;
 
@@ -29,7 +29,7 @@ public class Node
         this.y = y;
     }
 
-    public int fCost
+    public float fCost
     {
         get
         {

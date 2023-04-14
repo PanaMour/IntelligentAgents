@@ -33,24 +33,26 @@ public class AgentController : MonoBehaviour
         currentPosition = new Node(" ",Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(-transform.position.z));
 
         TextAsset environmentData = Resources.Load<TextAsset>(environmentTextFile);
-        grid = new Grid(environmentData.text);
+        grid = new Grid(environmentData.text, currentPosition);
         Vector2Int nextBuildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
         string building = plan[currentBuildingIndex];
         string[] buildingInfo = building.Split();
         string buildingIdentifier = buildingInfo[buildingInfo.Length - 1];
-        currentDestination = new Node(buildingIdentifier, nextBuildingPosition.x, nextBuildingPosition.y);
+        currentDestination = grid.grid[nextBuildingPosition.x,nextBuildingPosition.y];
+        //currentDestination.walkable = true;
         currentPath = Pathfinding.FindPath(grid, currentPosition, currentDestination);
-        Debug.Log(currentPosition.x + " " +currentPosition.y);
-        Debug.Log(currentDestination.x + " " + currentDestination.y);
-        Debug.Log(currentPath.Count);
+        //Debug.Log("STARTPOS "+currentPosition.x + " " +currentPosition.y);
+        //Debug.Log("DESTPOS "+currentDestination.x + " " + currentDestination.y);
+        //Debug.Log(currentPath.Count);
         StartCoroutine(Movement());
     }
 
     private IEnumerator Movement()
     {
-        Debug.Log("Moving");
+        //Debug.Log("Moving");
         foreach (Node n in currentPath) {
-            transform.position = new Vector3(currentPosition.x, transform.position.y, -currentPosition.y);
+            //Debug.Log(n.x + " " + n.y);
+            transform.position = new Vector3(n.x, transform.position.y, -n.y);
             yield return new WaitForSeconds(2.0f);
         }
     }
