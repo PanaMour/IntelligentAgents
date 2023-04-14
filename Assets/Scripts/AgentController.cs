@@ -7,6 +7,7 @@ public class AgentController : MonoBehaviour
 {
     public float moveSpeed = 1f;
     public float energy = 100f;
+    public float delay = 0.1f;
     public GameObject house;
     public string planFileName;
     private Node currentPosition;
@@ -15,14 +16,14 @@ public class AgentController : MonoBehaviour
     [SerializeField] private string[] firstLine;
     Node currentDestination;
     private int currentBuildingIndex = 0;
-    private bool exploring = true;
+    private bool exploring = false;
     [SerializeField] TextAsset planData;
     private string environmentTextFile = "environment";
     [SerializeField] private Grid grid;
     [SerializeField] private List<Node> currentPath;
     private void Start()
     {
-        planFileName = "agent_"+gameObject.name.Split('_')[1]+"_plan";
+        planFileName = "agent_" + gameObject.name.Split('_')[1] + "_plan";
         planData = Resources.Load<TextAsset>(planFileName);
         if (planData != null)
         {
@@ -30,7 +31,7 @@ public class AgentController : MonoBehaviour
             string[] planLines = planData.text.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.RemoveEmptyEntries);
 
             // Extract the agent number from the first line of the plan
-            firstLine = planLines[0].Split();
+            string[] firstLine = planLines[0].Split();
             string agentNumber = firstLine[firstLine.Length - 1];
             // Extract the buildings from the plan that are assigned to this agent
             List<string> agentBuildings = new List<string>();
@@ -62,9 +63,74 @@ public class AgentController : MonoBehaviour
 
         TextAsset environmentData = Resources.Load<TextAsset>(environmentTextFile);
         grid = new Grid(environmentData.text, currentPosition);
-        grid.grid[currentPosition.x, currentPosition.y].walkable= true;
-        FindPath();
+        grid.grid[currentPosition.x, currentPosition.y].walkable = true;
+
+        // Find the position of the building B
+        Vector2Int buildingBPosition = GetBuildingPosition("building B");
+        Debug.Log(buildingBPosition);
+        if (buildingBPosition != Vector2Int.zero)
+        {
+            // Start moving randomly until the agent discovers the location of the building B
+            StartCoroutine(RandomMovement(buildingBPosition));
+        }
+        else
+        {
+            Debug.LogError("Building B not found");
+        }
     }
+
+    private IEnumerator RandomMovement(Vector2Int buildingBPosition)
+    {
+        bool foundBuilding = false;
+        while (!foundBuilding)
+        {
+            // Get a list of neighboring nodes
+            List<Node> allNeighbors = grid.GetNeighbours(currentPosition);
+            
+            foreach(Node node in allNeighbors)
+            {
+                Debug.Log("node: "+node.x + " " + node.y);
+                Debug.Log("building: " + buildingBPosition.x + " " + buildingBPosition.y);
+                if(node.x == buildingBPosition.x && node.y == buildingBPosition.y)
+                {
+                    foundBuilding = true;
+                    break;
+                }
+            }
+            List<Node> neighbors = grid.GetWalkableNeighbours(currentPosition);
+            // Move randomly to one of the neighboring nodes
+            if (neighbors.Count > 0 && !foundBuilding)
+            {
+                int randomIndex = Random.Range(0, neighbors.Count);
+                Node nextNode = neighbors[randomIndex];
+
+                // Update the current position and grid
+                currentPosition = nextNode;
+                grid.grid[currentPosition.x, currentPosition.y].discovered = true;
+
+                // Calculate the target position
+                Vector3 targetPosition = new Vector3(currentPosition.x, transform.position.y, -currentPosition.y);
+
+                // Move the agent smoothly towards the target position
+                while (transform.position != targetPosition)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                    yield return null;
+                }
+                energy -= 1;
+                // Wait for a short delay
+                yield return new WaitForSeconds(delay);
+            }
+            else if (foundBuilding)
+            {
+                // Once the agent discovers the location of the building B, start following the plan
+                currentDestination = grid.grid[buildingBPosition.x, buildingBPosition.y];
+                currentPath = Pathfinding.FindPath(grid, currentPosition, currentDestination);
+                StartCoroutine(Movement());
+            }
+        }
+    }
+
 
 
     private IEnumerator Movement()
@@ -78,7 +144,7 @@ public class AgentController : MonoBehaviour
                 yield return null;
             }
             energy -= 1;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(delay);
         }
         currentBuildingIndex += 1;
         //currentPosition.symbol = " ";
@@ -109,7 +175,25 @@ public class AgentController : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        if (exploring)
+        {
+            if (currentPath == null)
+            {
+                Vector2Int buildingBPosition = GetBuildingPosition("building B");
+                if (buildingBPosition != Vector2Int.zero)
+                {
+                    // Start moving randomly until the agent discovers the location of the building B
+                    StartCoroutine(RandomMovement(buildingBPosition));
+                }
+                else
+                {
+                    Debug.LogError("Building B not found");
+                }
+            }
+        }
     }
+
 
     // Get the position of a building in the grid based on its index in the plan
     private Vector2Int GetBuildingPosition(string building)

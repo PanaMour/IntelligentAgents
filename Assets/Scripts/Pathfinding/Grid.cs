@@ -64,4 +64,31 @@ public class Grid
         }
         return neighbours;
     }
+
+    public List<Node> GetWalkableNeighbours(Node node)
+    {
+        List<Node> neighbours = new List<Node>();
+        if (node.x + 1 < sizeX - 1 && grid[node.x + 1, node.y].walkable)
+        {
+            neighbours.Add(grid[node.x + 1, node.y]);
+        }
+        if (node.y + 1 < sizeY - 1 && grid[node.x , node.y + 1].walkable)
+        {
+            neighbours.Add(grid[node.x, node.y + 1]);
+        }
+        if (node.x - 1 >= 0 && grid[node.x - 1, node.y].walkable)
+        {
+            neighbours.Add(grid[node.x - 1, node.y]);
+        }
+        if (node.y - 1 >= 0 && grid[node.x, node.y - 1].walkable)
+        {
+            neighbours.Add(grid[node.x, node.y - 1]);
+        }
+
+        foreach (Node n in neighbours)
+        {
+            if (node.x == 5 && node.y == 5) Debug.Log("DESTINATION FOUND");
+        }
+        return neighbours;
+    }
 }
