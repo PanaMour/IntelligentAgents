@@ -64,10 +64,10 @@ public class AgentController : MonoBehaviour
         TextAsset environmentData = Resources.Load<TextAsset>(environmentTextFile);
         grid = new Grid(environmentData.text, currentPosition);
         grid.grid[currentPosition.x, currentPosition.y].walkable = true;
+        grid.grid[currentPosition.x, currentPosition.y].visited = true;
 
         // Find the position of the building B
         Vector2Int buildingBPosition = GetBuildingPosition("building B");
-        Debug.Log(buildingBPosition);
         if (buildingBPosition != Vector2Int.zero)
         {
             // Start moving randomly until the agent discovers the location of the building B
@@ -97,17 +97,48 @@ public class AgentController : MonoBehaviour
                     break;
                 }
             }
-            List<Node> neighbors = grid.GetWalkableNeighbours(currentPosition);
+            List<Node> neighborsUnvisited = grid.GetWalkableNeighbours(currentPosition).FindAll(n => !n.visited);
+            List<Node> neighborsVisited = grid.GetWalkableNeighbours(currentPosition).FindAll(n => n.visited);
             // Move randomly to one of the neighboring nodes
-            if (neighbors.Count > 0 && !foundBuilding)
+            if (neighborsUnvisited.Count > 0 && !foundBuilding)
             {
-                int randomIndex = Random.Range(0, neighbors.Count);
-                Node nextNode = neighbors[randomIndex];
+                int randomIndex = Random.Range(0, neighborsUnvisited.Count);
+                Node nextNode = neighborsUnvisited[randomIndex];
 
                 // Update the current position and grid
                 currentPosition = nextNode;
                 grid.grid[currentPosition.x, currentPosition.y].discovered = true;
+                grid.grid[currentPosition.x, currentPosition.y].visited = true;
+                grid.grid[currentPosition.x+1, currentPosition.y].discovered = true;
+                grid.grid[currentPosition.x-1, currentPosition.y].discovered = true;
+                grid.grid[currentPosition.x, currentPosition.y+1].discovered = true;
+                grid.grid[currentPosition.x, currentPosition.y-1].discovered = true;
+                // Calculate the target position
+                Vector3 targetPosition = new Vector3(currentPosition.x, transform.position.y, -currentPosition.y);
 
+                // Move the agent smoothly towards the target position
+                while (transform.position != targetPosition)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                    yield return null;
+                }
+                energy -= 1;
+                // Wait for a short delay
+                yield return new WaitForSeconds(delay);
+            }
+            else if(neighborsUnvisited.Count == 0 && neighborsVisited.Count > 0 && !foundBuilding)
+            {
+                int randomIndex = Random.Range(0, neighborsVisited.Count);
+                Node nextNode = neighborsVisited[randomIndex];
+
+                // Update the current position and grid
+                currentPosition = nextNode;
+                grid.grid[currentPosition.x, currentPosition.y].discovered = true;
+                grid.grid[currentPosition.x, currentPosition.y].visited = true;
+                grid.grid[currentPosition.x + 1, currentPosition.y].discovered = true;
+                grid.grid[currentPosition.x - 1, currentPosition.y].discovered = true;
+                grid.grid[currentPosition.x, currentPosition.y + 1].discovered = true;
+                grid.grid[currentPosition.x, currentPosition.y - 1].discovered = true;
                 // Calculate the target position
                 Vector3 targetPosition = new Vector3(currentPosition.x, transform.position.y, -currentPosition.y);
 

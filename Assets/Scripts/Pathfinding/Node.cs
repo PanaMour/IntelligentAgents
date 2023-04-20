@@ -9,6 +9,7 @@ public class Node
     public int y;
     public string symbol;
     public bool discovered;
+    public bool visited;
 
     public float gCost;
     public int hCost;
