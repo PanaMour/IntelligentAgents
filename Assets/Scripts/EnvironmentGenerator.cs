@@ -12,6 +12,8 @@ public class EnvironmentGenerator : MonoBehaviour
     public GameObject bankPrefab;
     public GameObject agentPrefab;
     public GameObject housePrefab;
+    public GameObject goldPrefab;
+    public GameObject energypotPrefab;
     public GameObject ATMlogo;
     private GameObject groundObject;
     public static TextAsset environmentData;
@@ -51,6 +53,18 @@ public class EnvironmentGenerator : MonoBehaviour
                         bank.transform.rotation = Quaternion.Euler(-90f,-90f,-90f);
                         atmlogo.transform.rotation = Quaternion.Euler(90f,0,0);
                         bank.tag = "Bank";
+                        break;
+                    case 'E':
+                        position += new Vector3(0, -0.5f, 0);
+                        GameObject energyPot = Instantiate(energypotPrefab, position, Quaternion.identity);
+                        //energyPot.transform.rotation = Quaternion.Euler(-90f, -90f, -90f);
+                        energyPot.tag = "Energy Pot";
+                        break;
+                    case 'G':
+                        position += new Vector3(0, -0.5f, 0);
+                        GameObject gold = Instantiate(goldPrefab, position, Quaternion.identity);
+                        gold.transform.rotation = Quaternion.Euler(-90f, -90f, -90f);
+                        gold.tag = "Gold";
                         break;
                     case '0':
                     case '1':

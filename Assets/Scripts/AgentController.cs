@@ -67,19 +67,20 @@ public class AgentController : MonoBehaviour
         grid.grid[currentPosition.x, currentPosition.y].visited = true;
 
         // Find the position of the building B
-        Vector2Int buildingBPosition = GetBuildingPosition("building B");
-        if (buildingBPosition != Vector2Int.zero)
+        Vector2Int buildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
+        if (buildingPosition != Vector2Int.zero)
         {
-            // Start moving randomly until the agent discovers the location of the building B
-            StartCoroutine(RandomMovement(buildingBPosition));
+            // Start moving randomly until the agent discovers the location of the building
+            string symbol = grid.grid[buildingPosition.x,buildingPosition.y].symbol;
+            StartCoroutine(RandomMovement(buildingPosition, symbol));
         }
         else
         {
-            Debug.LogError("Building B not found");
+            Debug.LogError("Building not found");
         }
     }
 
-    private IEnumerator RandomMovement(Vector2Int buildingBPosition)
+    private IEnumerator RandomMovement(Vector2Int buildingPosition, string symbol)
     {
         bool foundBuilding = false;
         while (!foundBuilding)
@@ -90,8 +91,8 @@ public class AgentController : MonoBehaviour
             foreach(Node node in allNeighbors)
             {
                 Debug.Log("node: "+node.x + " " + node.y);
-                Debug.Log("building: " + buildingBPosition.x + " " + buildingBPosition.y);
-                if(node.x == buildingBPosition.x && node.y == buildingBPosition.y)
+                Debug.Log("building: " + buildingPosition.x + " " + buildingPosition.y);
+                if(node.symbol == symbol)
                 {
                     foundBuilding = true;
                     break;
@@ -155,7 +156,9 @@ public class AgentController : MonoBehaviour
             else if (foundBuilding)
             {
                 // Once the agent discovers the location of the building B, start following the plan
-                currentDestination = grid.grid[buildingBPosition.x, buildingBPosition.y];
+                currentBuildingIndex += 1;
+                buildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
+                currentDestination = grid.grid[buildingPosition.x, buildingPosition.y];
                 currentPath = Pathfinding.FindPath(grid, currentPosition, currentDestination);
                 StartCoroutine(Movement());
             }
@@ -211,15 +214,16 @@ public class AgentController : MonoBehaviour
         {
             if (currentPath == null)
             {
-                Vector2Int buildingBPosition = GetBuildingPosition("building B");
-                if (buildingBPosition != Vector2Int.zero)
+                Vector2Int buildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
+                if (buildingPosition != Vector2Int.zero)
                 {
                     // Start moving randomly until the agent discovers the location of the building B
-                    StartCoroutine(RandomMovement(buildingBPosition));
+                    string symbol = grid.grid[buildingPosition.x,buildingPosition.y].symbol;
+            StartCoroutine(RandomMovement(buildingPosition, symbol));
                 }
                 else
                 {
-                    Debug.LogError("Building B not found");
+                    Debug.LogError("Building not found");
                 }
             }
         }
