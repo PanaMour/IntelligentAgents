@@ -57,13 +57,12 @@ public class EnvironmentGenerator : MonoBehaviour
                     case 'E':
                         position += new Vector3(0, -0.5f, 0);
                         GameObject energyPot = Instantiate(energypotPrefab, position, Quaternion.identity);
-                        //energyPot.transform.rotation = Quaternion.Euler(-90f, -90f, -90f);
                         energyPot.tag = "Energy Pot";
                         break;
                     case 'G':
                         position += new Vector3(0, -0.5f, 0);
                         GameObject gold = Instantiate(goldPrefab, position, Quaternion.identity);
-                        gold.transform.rotation = Quaternion.Euler(-90f, -90f, -90f);
+                        //gold.transform.rotation = Quaternion.Euler(-90f, -90f, -90f);
                         gold.tag = "Gold";
                         break;
                     case '0':

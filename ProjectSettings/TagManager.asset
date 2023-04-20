@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Agent
   - Bank
+  - Energy Pot
+  - Gold
   layers:
   - Default
   - TransparentFX

@@ -18,7 +18,7 @@ public class Node
     public Node(string symbol , int x, int y)
     {
         this.symbol = symbol;
-        if (symbol.Equals(" "))
+        if (symbol.Equals(" ") || symbol.Equals("E") || symbol.Equals("G"))
         {
             this.walkable = true;
         } else

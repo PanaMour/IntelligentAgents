@@ -463,6 +463,8 @@ MonoBehaviour:
     type: 3}
   housePrefab: {fileID: 3232564120067614096, guid: 2dcc44ecd7570204dbc0c69d3e89c6e3,
     type: 3}
+  goldPrefab: {fileID: 0}
+  energypotPrefab: {fileID: 100000, guid: 54b107e50acd7e24b96d7de887c68833, type: 3}
   ATMlogo: {fileID: 7216719137605417766, guid: 030a41f095157bd4ead34613bc612dc7, type: 3}
 --- !u!4 &1367708049
 Transform:
