@@ -1,28 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class AgentController : MonoBehaviour
 {
     public float moveSpeed = 1f;
     public float energy = 100f;
+    public int gold = 0;
     public float delay = 0.1f;
     public GameObject house;
     public string planFileName;
     private Node currentPosition;
-    private Vector2Int nextPosition;
     [SerializeField] private string[] plan;
     [SerializeField] private string[] firstLine;
-    Node currentDestination;
+    private Node currentDestination;
     private int currentBuildingIndex = 0;
     private bool exploring = false;
+    private bool energySearching = false;
     [SerializeField] TextAsset planData;
     private string environmentTextFile = "environment";
     [SerializeField] private Grid grid;
     [SerializeField] private List<Node> currentPath;
+    [SerializeField] private HashSet<Node> energyPotLocations;
     private void Start()
     {
+        energyPotLocations = new HashSet<Node>();
         planFileName = "agent_" + gameObject.name.Split('_')[1] + "_plan";
         planData = Resources.Load<TextAsset>(planFileName);
         if (planData != null)
@@ -80,6 +84,11 @@ public class AgentController : MonoBehaviour
         }
     }
 
+    public float Distance(Node a, Node b)
+    {
+        return Mathf.Sqrt((a.x - b.x) ^ 2 + (a.y - b.y) ^ 2);
+    }
+
     private IEnumerator RandomMovement(Vector2Int buildingPosition, string symbol)
     {
         bool foundBuilding = false;
@@ -87,7 +96,29 @@ public class AgentController : MonoBehaviour
         {
             // Get a list of neighboring nodes
             List<Node> allNeighbors = grid.GetNeighbours(currentPosition);
-            
+            energyPotLocations.UnionWith(allNeighbors.FindAll(n => n.symbol == "E"));
+
+            if(energy <= 30)
+            {
+                float currentDistance = 99999;
+                Node closestNode = null;
+                foreach(Node node in energyPotLocations)
+                {
+                    if(Distance(currentPosition,node)<currentDistance)
+                    {
+                        currentDistance= Distance(currentPosition,node);
+                        closestNode = node;
+                    }
+                }
+                if(closestNode != null)
+                {
+                    energySearching = true;
+                    Node energyPotDestination = grid.grid[closestNode.x, closestNode.y];
+                    currentPath = Pathfinding.FindPath(grid, currentPosition, energyPotDestination);
+                    StartCoroutine(Movement());
+                }
+            }
+
             foreach(Node node in allNeighbors)
             {
                 Debug.Log("node: "+node.x + " " + node.y);
@@ -98,6 +129,7 @@ public class AgentController : MonoBehaviour
                     break;
                 }
             }
+
             List<Node> neighborsUnvisited = grid.GetWalkableNeighbours(currentPosition).FindAll(n => !n.visited);
             List<Node> neighborsVisited = grid.GetWalkableNeighbours(currentPosition).FindAll(n => n.visited);
             // Move randomly to one of the neighboring nodes
@@ -105,7 +137,32 @@ public class AgentController : MonoBehaviour
             {
                 int randomIndex = Random.Range(0, neighborsUnvisited.Count);
                 Node nextNode = neighborsUnvisited[randomIndex];
-
+                if (nextNode.symbol == "E")
+                {
+                    nextNode.symbol = " ";
+                    energy = Mathf.Min(100, energy + 20);
+                    GameObject[] energyPots = GameObject.FindGameObjectsWithTag("Energy Pot");
+                    foreach (GameObject energyPot in energyPots)
+                    {
+                        if (energyPot.transform.position.x == currentPosition.x && energyPot.transform.position.z == -currentPosition.y)
+                        {
+                            energyPot.SetActive(false);
+                        }
+                    }
+                }
+                if (nextNode.symbol == "G")
+                {
+                    nextNode.symbol = " ";
+                    gold += 1;
+                    GameObject[] goldObj = GameObject.FindGameObjectsWithTag("Gold");
+                    foreach (GameObject gold1 in goldObj)
+                    {
+                        if (gold1.transform.position.x == currentPosition.x && gold1.transform.position.z == -currentPosition.y)
+                        {
+                            gold1.SetActive(false);
+                        }
+                    }
+                }
                 // Update the current position and grid
                 currentPosition = nextNode;
                 grid.grid[currentPosition.x, currentPosition.y].discovered = true;
@@ -180,8 +237,15 @@ public class AgentController : MonoBehaviour
             energy -= 1;
             yield return new WaitForSeconds(delay);
         }
-        currentBuildingIndex += 1;
-        //currentPosition.symbol = " ";
+        if (energySearching)
+        {
+            energySearching = false;
+        }
+        else
+        {
+            currentBuildingIndex += 1;
+            //currentPosition.symbol = " ";
+        }
         currentPosition.x = Mathf.RoundToInt(transform.position.x);
         currentPosition.y = Mathf.RoundToInt(-transform.position.z);
         FindPath();
