@@ -23,7 +23,6 @@ public class AgentController : MonoBehaviour
     private string environmentTextFile = "environment";
     [SerializeField] private Grid grid;
     [SerializeField] private List<Node> currentPath;
-    private List<Node> energyPath;
     [SerializeField] private HashSet<Node> energyPotLocations;
     private void Start()
     {
@@ -115,17 +114,15 @@ public class AgentController : MonoBehaviour
                 {
                     energySearching = true;
                     Node energyPotDestination = grid.grid[closestNode.x, closestNode.y];
-                    energyPath = Pathfinding.FindPath(grid, currentPosition, energyPotDestination);
-                    Debug.Log("ENERGY");
+                    currentPath = Pathfinding.FindPath(grid, currentPosition, energyPotDestination);
                     StartCoroutine(Movement());
-                    yield break;
                 }
             }
 
             foreach(Node node in allNeighbors)
             {
-                //Debug.Log("node: "+node.x + " " + node.y);
-                //Debug.Log("building: " + buildingPosition.x + " " + buildingPosition.y);
+                Debug.Log("node: "+node.x + " " + node.y);
+                Debug.Log("building: " + buildingPosition.x + " " + buildingPosition.y);
                 if(node.symbol == symbol)
                 {
                     foundBuilding = true;
@@ -221,7 +218,6 @@ public class AgentController : MonoBehaviour
                 currentDestination = grid.grid[buildingPosition.x, buildingPosition.y];
                 currentPath = Pathfinding.FindPath(grid, currentPosition, currentDestination);
                 StartCoroutine(Movement());
-                yield break;
             }
         }
     }
@@ -230,67 +226,29 @@ public class AgentController : MonoBehaviour
 
     private IEnumerator Movement()
     {
+        foreach (Node n in currentPath)
+        {
+            Vector3 targetPosition = new Vector3(n.x, transform.position.y, -n.y);
+            while (transform.position != targetPosition)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                yield return null;
+            }
+            energy -= 1;
+            yield return new WaitForSeconds(delay);
+        }
         if (energySearching)
         {
-            foreach (Node n in energyPath)
-            {
-                Vector3 targetPosition = new Vector3(n.x, transform.position.y, -n.y);
-                while (transform.position != targetPosition)
-                {
-                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
-                    yield return null;
-                }
-                energy -= 1;
-                if (n.symbol == "E")
-                {
-                    n.symbol = " ";
-                    energy = Mathf.Min(100, energy + 20);
-                    GameObject[] energyPots = GameObject.FindGameObjectsWithTag("Energy Pot");
-                    foreach (GameObject energyPot in energyPots)
-                    {
-                        if (energyPot.transform.position.x == currentPosition.x && energyPot.transform.position.z == -currentPosition.y)
-                        {
-                            energyPot.SetActive(false);
-                        }
-                    }
-                }
-                yield return new WaitForSeconds(delay);
-            }
             energySearching = false;
-            Debug.Log("ENERGY FALSE");
-            currentPosition.x = Mathf.RoundToInt(transform.position.x);
-            currentPosition.y = Mathf.RoundToInt(-transform.position.z);
-            if (currentPath!=null && currentPath.Count>0)
-            {
-                FindPath();
-                yield break;
-            } else
-            {
-                Vector2Int buildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
-                string symbol = grid.grid[buildingPosition.x, buildingPosition.y].symbol;
-                StartCoroutine(RandomMovement(buildingPosition, symbol));
-                yield break;
-            }
-        } else
+        }
+        else
         {
-            foreach (Node n in currentPath)
-            {
-                Vector3 targetPosition = new Vector3(n.x, transform.position.y, -n.y);
-                while (transform.position != targetPosition)
-                {
-                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
-                    yield return null;
-                }
-                energy -= 1;
-                yield return new WaitForSeconds(delay);
-            }
             currentBuildingIndex += 1;
             //currentPosition.symbol = " ";
-            currentPosition.x = Mathf.RoundToInt(transform.position.x);
-            currentPosition.y = Mathf.RoundToInt(-transform.position.z);
-            FindPath();
-            yield break;
         }
+        currentPosition.x = Mathf.RoundToInt(transform.position.x);
+        currentPosition.y = Mathf.RoundToInt(-transform.position.z);
+        FindPath();
     }
 
     private void FindPath()
@@ -303,7 +261,6 @@ public class AgentController : MonoBehaviour
             string buildingIdentifier = buildingInfo[buildingInfo.Length - 1];
             currentDestination = grid.grid[nextBuildingPosition.x, nextBuildingPosition.y];
             currentPath = Pathfinding.FindPath(grid, currentPosition, currentDestination);
-            Debug.Log("NEW PATH");
             StartCoroutine(Movement());
         }
     }
