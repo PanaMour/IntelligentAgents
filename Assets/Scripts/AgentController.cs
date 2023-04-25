@@ -98,28 +98,30 @@ public class AgentController : MonoBehaviour
             List<Node> allNeighbors = grid.GetNeighbours(currentPosition);
             energyPotLocations.UnionWith(allNeighbors.FindAll(n => n.symbol == "E"));
 
-            if(energy <= 30)
+            if (energy <= 30)
             {
-                float currentDistance = 99999;
-                Node closestNode = null;
-                foreach(Node node in energyPotLocations)
+                Node energyPotNode = null;
+                foreach (Node node in energyPotLocations)
                 {
-                    if(Distance(currentPosition,node)<currentDistance)
+                    Debug.Log(node.x + "+ JOE + " + node.y);
+                    if (!node.visited && node.discovered)
                     {
-                        currentDistance= Distance(currentPosition,node);
-                        closestNode = node;
+                        energyPotNode = node;
+                        break;
                     }
                 }
-                if(closestNode != null)
+                if (energyPotNode != null)
                 {
+                    currentDestination = energyPotNode;
                     energySearching = true;
-                    Node energyPotDestination = grid.grid[closestNode.x, closestNode.y];
-                    currentPath = Pathfinding.FindPath(grid, currentPosition, energyPotDestination);
+                    currentPath = Pathfinding.FindPath(grid, currentPosition, energyPotNode);
                     StartCoroutine(Movement());
+                    yield break;
                 }
             }
 
-            foreach(Node node in allNeighbors)
+
+            foreach (Node node in allNeighbors)
             {
                 Debug.Log("node: "+node.x + " " + node.y);
                 Debug.Log("building: " + buildingPosition.x + " " + buildingPosition.y);
@@ -137,11 +139,23 @@ public class AgentController : MonoBehaviour
             {
                 int randomIndex = Random.Range(0, neighborsUnvisited.Count);
                 Node nextNode = neighborsUnvisited[randomIndex];
+                
+                // Update the current position and grid
+                currentPosition = nextNode;
+                grid.grid[currentPosition.x, currentPosition.y].discovered = true;
+                grid.grid[currentPosition.x, currentPosition.y].visited = true;
+                grid.grid[currentPosition.x+1, currentPosition.y].discovered = true;
+                grid.grid[currentPosition.x-1, currentPosition.y].discovered = true;
+                grid.grid[currentPosition.x, currentPosition.y+1].discovered = true;
+                grid.grid[currentPosition.x, currentPosition.y-1].discovered = true;
+                // Calculate the target position
+                Vector3 targetPosition = new Vector3(currentPosition.x, transform.position.y, -currentPosition.y);
                 if (nextNode.symbol == "E")
                 {
                     nextNode.symbol = " ";
                     energy = Mathf.Min(100, energy + 20);
                     GameObject[] energyPots = GameObject.FindGameObjectsWithTag("Energy Pot");
+
                     foreach (GameObject energyPot in energyPots)
                     {
                         if (energyPot.transform.position.x == currentPosition.x && energyPot.transform.position.z == -currentPosition.y)
@@ -163,17 +177,6 @@ public class AgentController : MonoBehaviour
                         }
                     }
                 }
-                // Update the current position and grid
-                currentPosition = nextNode;
-                grid.grid[currentPosition.x, currentPosition.y].discovered = true;
-                grid.grid[currentPosition.x, currentPosition.y].visited = true;
-                grid.grid[currentPosition.x+1, currentPosition.y].discovered = true;
-                grid.grid[currentPosition.x-1, currentPosition.y].discovered = true;
-                grid.grid[currentPosition.x, currentPosition.y+1].discovered = true;
-                grid.grid[currentPosition.x, currentPosition.y-1].discovered = true;
-                // Calculate the target position
-                Vector3 targetPosition = new Vector3(currentPosition.x, transform.position.y, -currentPosition.y);
-
                 // Move the agent smoothly towards the target position
                 while (transform.position != targetPosition)
                 {
@@ -235,6 +238,34 @@ public class AgentController : MonoBehaviour
                 yield return null;
             }
             energy -= 1;
+            if (n.symbol == "E")
+            {
+                n.symbol = " ";
+                energy = Mathf.Min(100, energy + 20);
+                GameObject[] energyPots = GameObject.FindGameObjectsWithTag("Energy Pot");
+
+                foreach (GameObject energyPot in energyPots)
+                {
+                    if (energyPot.transform.position.x == n.x && energyPot.transform.position.z == -n.y)
+                    {
+                        energyPot.SetActive(false);
+                    }
+                }
+            }
+            else if (n.symbol == "G")
+            {
+                n.symbol = " ";
+                gold += 1;
+                GameObject[] goldObj = GameObject.FindGameObjectsWithTag("Gold");
+
+                foreach (GameObject gold1 in goldObj)
+                {
+                    if (gold1.transform.position.x == n.x && gold1.transform.position.z == -n.y)
+                    {
+                        gold1.SetActive(false);
+                    }
+                }
+            }
             yield return new WaitForSeconds(delay);
         }
         if (energySearching)
@@ -260,8 +291,25 @@ public class AgentController : MonoBehaviour
             string[] buildingInfo = building.Split();
             string buildingIdentifier = buildingInfo[buildingInfo.Length - 1];
             currentDestination = grid.grid[nextBuildingPosition.x, nextBuildingPosition.y];
-            currentPath = Pathfinding.FindPath(grid, currentPosition, currentDestination);
-            StartCoroutine(Movement());
+            if (currentDestination.discovered)
+            {
+                currentPath = Pathfinding.FindPath(grid, currentPosition, currentDestination);
+                StartCoroutine(Movement());
+            }
+            else
+            {
+                Vector2Int buildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
+                if (buildingPosition != Vector2Int.zero)
+                {
+                    // Start moving randomly until the agent discovers the location of the building
+                    string symbol = grid.grid[buildingPosition.x, buildingPosition.y].symbol;
+                    StartCoroutine(RandomMovement(buildingPosition, symbol));
+                }
+                else
+                {
+                    Debug.LogError("Building not found");
+                }
+            }
         }
     }
 

@@ -32,7 +32,7 @@ public class Pathfinding
             List<Node> neighs = grid.GetNeighbours(node);
             foreach (Node neighbour in neighs)
             {
-                if(neighbour==endNode && int.TryParse(neighbour.symbol, out myInt))
+                if(neighbour==endNode && (int.TryParse(neighbour.symbol, out myInt) || neighbour.symbol.Equals("E") || neighbour.symbol.Equals("G")))
                 {
                     endNode.parent = node;
                     return RetracePath(startNode, endNode);
