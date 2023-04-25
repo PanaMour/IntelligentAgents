@@ -101,13 +101,13 @@ public class AgentController : MonoBehaviour
             if (energy <= 30)
             {
                 Node energyPotNode = null;
+                float curDistance = 99999;
                 foreach (Node node in energyPotLocations)
                 {
-                    Debug.Log(node.x + "+ JOE + " + node.y);
-                    if (!node.visited && node.discovered)
+                    if (!node.visited && node.discovered && Distance(currentPosition,node) < curDistance)
                     {
                         energyPotNode = node;
-                        break;
+                        curDistance = Distance(currentPosition,node);
                     }
                 }
                 if (energyPotNode != null)
