@@ -25,6 +25,7 @@ public class AgentController : MonoBehaviour
     [SerializeField] private Grid grid;
     [SerializeField] private List<Node> currentPath;
     [SerializeField] private HashSet<Node> energyPotLocations;
+    [SerializeField] private int energyPotStorage = 0;
     private void Start()
     {
         energyPotLocations = new HashSet<Node>();
@@ -101,23 +102,31 @@ public class AgentController : MonoBehaviour
             energyPotLocations.UnionWith(allNeighbors.FindAll(n => n.symbol == "E"));
             if (energy <= 30)
             {
-                Node energyPotNode = null;
-                float curDistance = 99999;
-                foreach (Node node in energyPotLocations)
+                if (energyPotStorage > 0)
                 {
-                    if (!node.visited && node.discovered && Distance(currentPosition,node) < curDistance)
-                    {
-                        energyPotNode = node;
-                        curDistance = Distance(currentPosition,node);
-                    }
+                    energyPotStorage--;
+                    energy += 20;
                 }
-                if (energyPotNode != null)
+                else
                 {
-                    currentDestination = energyPotNode;
-                    energySearching = true;
-                    currentPath = Pathfinding.FindPath(grid, currentPosition, energyPotNode);
-                    StartCoroutine(Movement());
-                    yield break;
+                    Node energyPotNode = null;
+                    float curDistance = 99999;
+                    foreach (Node node in energyPotLocations)
+                    {
+                        if (!node.visited && node.discovered && Distance(currentPosition, node) < curDistance)
+                        {
+                            energyPotNode = node;
+                            curDistance = Distance(currentPosition, node);
+                        }
+                    }
+                    if (energyPotNode != null)
+                    {
+                        currentDestination = energyPotNode;
+                        energySearching = true;
+                        currentPath = Pathfinding.FindPath(grid, currentPosition, energyPotNode);
+                        StartCoroutine(Movement());
+                        yield break;
+                    }
                 }
             }
             foreach (Node node in allNeighbors)
@@ -175,7 +184,15 @@ public class AgentController : MonoBehaviour
                 if (nextNode.symbol == "E")
                 {
                     nextNode.symbol = " ";
-                    energy = Mathf.Min(100, energy + 20);
+                    if (energy < 80)
+                    {
+                        energy = Mathf.Min(100, energy + 20);
+                    }
+                    else
+                    {
+                        energyPotStorage += 1;
+                    }
+                    
                     GameObject[] energyPots = GameObject.FindGameObjectsWithTag("Energy Pot");
 
                     foreach (GameObject energyPot in energyPots)
