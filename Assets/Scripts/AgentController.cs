@@ -26,6 +26,7 @@ public class AgentController : MonoBehaviour
     [SerializeField] private List<Node> currentPath;
     [SerializeField] private HashSet<Node> energyPotLocations;
     [SerializeField] private int energyPotStorage = 0;
+    private List<GameObject> tradedAgents = new List<GameObject>();
     private void Start()
     {
         energyPotLocations = new HashSet<Node>();
@@ -147,6 +148,10 @@ public class AgentController : MonoBehaviour
                     int agentX = Mathf.RoundToInt(agentPosition.x);
                     int agentY = Mathf.RoundToInt(-agentPosition.z);
 
+                    if(agentX == node.x && agentY == node.y && energyPotStorage > 0)
+                    {
+                        SellEnergy(agent);
+                    }
                     if (agentX == node.x && agentY == node.y && gold >= 20)
                     {
                         gold -= 20;
@@ -266,6 +271,12 @@ public class AgentController : MonoBehaviour
 
     private void BuyKnowledge(GameObject agent)
     {
+        if (tradedAgents.Contains(agent))
+        {
+            Debug.Log("Already traded with agent " + agent.name);
+            return;
+        }
+
         Node[,] agentGrid = agent.GetComponent<AgentController>().grid.grid;
         for (int i = 0; i < grid.grid.GetLength(0); i++)
         {
@@ -275,9 +286,19 @@ public class AgentController : MonoBehaviour
                 
             }
         }
+        tradedAgents.Add(agent);
     }
 
-
+    private void SellEnergy(GameObject agent)
+    {
+        if((agent.GetComponent<AgentController>().energy < 30 && agent.GetComponent<AgentController>().gold >= 10) || (agent.GetComponent<AgentController>().energy < 80 && agent.GetComponent<AgentController>().gold >= 30))
+        {
+            energyPotStorage--;
+            agent.GetComponent<AgentController>().energy += 20;
+            agent.GetComponent<AgentController>().gold -= 10;
+            gold += 10;
+        }
+    }
 
     private IEnumerator Movement()
     {
