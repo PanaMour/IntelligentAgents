@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,6 +70,7 @@ public class AgentController : MonoBehaviour
         grid = new Grid(environmentData.text, currentPosition);
         grid.grid[currentPosition.x, currentPosition.y].walkable = true;
         grid.grid[currentPosition.x, currentPosition.y].visited = true;
+        grid.grid[currentPosition.x, currentPosition.y].discovered = true;
 
         // Find the position of the building B
         Vector2Int buildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
@@ -97,7 +99,6 @@ public class AgentController : MonoBehaviour
             // Get a list of neighboring nodes
             List<Node> allNeighbors = grid.GetNeighbours(currentPosition);
             energyPotLocations.UnionWith(allNeighbors.FindAll(n => n.symbol == "E"));
-
             if (energy <= 30)
             {
                 Node energyPotNode = null;
@@ -119,17 +120,38 @@ public class AgentController : MonoBehaviour
                     yield break;
                 }
             }
-
-
             foreach (Node node in allNeighbors)
             {
-                Debug.Log("node: "+node.x + " " + node.y);
+                Debug.Log("node: " + node.x + " " + node.y);
                 Debug.Log("building: " + buildingPosition.x + " " + buildingPosition.y);
-                if(node.symbol == symbol)
+                
+                if (node.symbol == symbol)
                 {
                     foundBuilding = true;
                     break;
                 }
+
+                GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
+                foreach (GameObject agent in agents)
+                {
+                    Vector3 agentPosition = agent.transform.position;
+                    int agentX = Mathf.RoundToInt(agentPosition.x);
+                    int agentY = Mathf.RoundToInt(-agentPosition.z);
+
+                    if (agentX == node.x && agentY == node.y && gold >= 20)
+                    {
+                        gold -= 20;
+                        BuyKnowledge(agent);
+                        break;
+                    }
+                }
+            }
+            if (grid.grid[buildingPosition.x, buildingPosition.y].discovered)
+            {
+                currentDestination = grid.grid[buildingPosition.x, buildingPosition.y];
+                currentPath = Pathfinding.FindPath(grid, currentPosition, currentDestination);
+                StartCoroutine(Movement());
+                yield break;
             }
 
             List<Node> neighborsUnvisited = grid.GetWalkableNeighbours(currentPosition).FindAll(n => !n.visited);
@@ -137,7 +159,7 @@ public class AgentController : MonoBehaviour
             // Move randomly to one of the neighboring nodes
             if (neighborsUnvisited.Count > 0 && !foundBuilding)
             {
-                int randomIndex = Random.Range(0, neighborsUnvisited.Count);
+                int randomIndex = UnityEngine.Random.Range(0, neighborsUnvisited.Count);
                 Node nextNode = neighborsUnvisited[randomIndex];
                 
                 // Update the current position and grid
@@ -189,7 +211,7 @@ public class AgentController : MonoBehaviour
             }
             else if(neighborsUnvisited.Count == 0 && neighborsVisited.Count > 0 && !foundBuilding)
             {
-                int randomIndex = Random.Range(0, neighborsVisited.Count);
+                int randomIndex = UnityEngine.Random.Range(0, neighborsVisited.Count);
                 Node nextNode = neighborsVisited[randomIndex];
 
                 // Update the current position and grid
@@ -215,12 +237,25 @@ public class AgentController : MonoBehaviour
             }
             else if (foundBuilding)
             {
-                // Once the agent discovers the location of the building B, start following the plan
+                // Once the agent discovers the location of the building, start following the plan
                 currentBuildingIndex += 1;
                 buildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
                 currentDestination = grid.grid[buildingPosition.x, buildingPosition.y];
                 currentPath = Pathfinding.FindPath(grid, currentPosition, currentDestination);
                 StartCoroutine(Movement());
+            }
+        }
+    }
+
+    private void BuyKnowledge(GameObject agent)
+    {
+        Node[,] agentGrid = agent.GetComponent<AgentController>().grid.grid;
+        for (int i = 0; i < grid.grid.GetLength(0); i++)
+        {
+            for (int j = 0; j < grid.grid.GetLength(1); j++)
+            {
+                grid.grid[i, j].discovered = grid.grid[i, j].discovered || agentGrid[i, j].discovered;
+                
             }
         }
     }
