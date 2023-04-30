@@ -10,7 +10,7 @@ public class AgentController : MonoBehaviour
     public float moveSpeed = 1f;
     public float energy = 100f;
     public int gold = 0;
-    public float delay = 0.1f;
+    public float delay = 1f;
     public GameObject house;
     public string planFileName;
     private Node currentPosition;
@@ -27,8 +27,10 @@ public class AgentController : MonoBehaviour
     [SerializeField] private HashSet<Node> energyPotLocations;
     [SerializeField] private int energyPotStorage = 0;
     private List<GameObject> tradedAgents = new List<GameObject>();
+    private Animator animator;
     private void Start()
     {
+        animator = GetComponent<Animator>();
         energyPotLocations = new HashSet<Node>();
         planFileName = "agent_" + gameObject.name.Split('_')[1] + "_plan";
         planData = Resources.Load<TextAsset>(planFileName);
@@ -225,8 +227,11 @@ public class AgentController : MonoBehaviour
                 while (transform.position != targetPosition)
                 {
                     transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                    animator.SetBool("isMoving", true);
+                    transform.LookAt(targetPosition);
                     yield return null;
                 }
+                animator.SetBool("isMoving", false);
                 energy -= 1;
                 // Wait for a short delay
                 yield return new WaitForSeconds(delay);
@@ -251,8 +256,11 @@ public class AgentController : MonoBehaviour
                 while (transform.position != targetPosition)
                 {
                     transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                    animator.SetBool("isMoving", true);
+                    transform.LookAt(targetPosition);
                     yield return null;
                 }
+                animator.SetBool("isMoving", false);
                 energy -= 1;
                 // Wait for a short delay
                 yield return new WaitForSeconds(delay);
@@ -308,8 +316,11 @@ public class AgentController : MonoBehaviour
             while (transform.position != targetPosition)
             {
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                animator.SetBool("isMoving", true);
+                transform.LookAt(targetPosition);
                 yield return null;
             }
+            animator.SetBool("isMoving", false);
             energy -= 1;
             if (n.symbol == "E")
             {

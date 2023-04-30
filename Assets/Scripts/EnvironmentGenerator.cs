@@ -76,7 +76,7 @@ public class EnvironmentGenerator : MonoBehaviour
                     case '8':
                     case '9':
                         GameObject houseObj = Instantiate(housePrefab, new Vector3(j, -0.5f, -i), Quaternion.identity);
-                        GameObject agentObj = Instantiate(agentPrefab, position, Quaternion.identity);
+                        GameObject agentObj = Instantiate(agentPrefab, new Vector3(j, -0.5f, -i), Quaternion.identity);
                         agentObj.name = "Agent_" + symbol;
                         agentObj.tag = "Agent";
                         AgentController agentController = agentObj.AddComponent<AgentController>();
