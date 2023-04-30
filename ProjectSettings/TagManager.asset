@@ -9,6 +9,7 @@ TagManager:
   - Energy Pot
   - Gold
   - Fuel
+  - Phone Booth
   layers:
   - Default
   - TransparentFX

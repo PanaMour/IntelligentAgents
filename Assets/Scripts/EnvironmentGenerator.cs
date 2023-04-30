@@ -11,6 +11,7 @@ public class EnvironmentGenerator : MonoBehaviour
     public GameObject wallPrefab;
     public GameObject bankPrefab;
     public GameObject fuelPrefab;
+    public GameObject phoneboothPrefab;
     public GameObject agentPrefab;
     public GameObject housePrefab;
     public GameObject goldPrefab;
@@ -59,6 +60,12 @@ public class EnvironmentGenerator : MonoBehaviour
                         position += new Vector3(0, -0.5f, 0);
                         GameObject fuel = Instantiate(fuelPrefab, position, Quaternion.identity);
                         fuel.tag = "Fuel";
+                        break;
+                    case 'P':
+                        position += new Vector3(0.2f, -0.5f, 0);
+                        GameObject phoneBooth = Instantiate(phoneboothPrefab, position, Quaternion.identity);
+                        phoneBooth.transform.rotation = Quaternion.Euler(-90f, 180f, 0f);
+                        phoneBooth.tag = "Phone Booth";
                         break;
                     case 'E':
                         position += new Vector3(0, -0.5f, 0);
