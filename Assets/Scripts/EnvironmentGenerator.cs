@@ -13,6 +13,7 @@ public class EnvironmentGenerator : MonoBehaviour
     public GameObject fuelPrefab;
     public GameObject phoneboothPrefab;
     public GameObject vendingmachinePrefab;
+    public GameObject watercoolerPrefab;
     public GameObject agentPrefab;
     public GameObject housePrefab;
     public GameObject goldPrefab;
@@ -73,6 +74,12 @@ public class EnvironmentGenerator : MonoBehaviour
                         GameObject vendingMachine = Instantiate(vendingmachinePrefab, position, Quaternion.identity);
                         vendingMachine.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
                         vendingMachine.tag = "Vending Machine";
+                        break;
+                    case 'W':
+                        position += new Vector3(0f, -0.5f, 0);
+                        GameObject waterCooler = Instantiate(watercoolerPrefab, position, Quaternion.identity);
+                        //waterCooler.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+                        waterCooler.tag = "Water Cooler";
                         break;
                     case 'E':
                         position += new Vector3(0, -0.5f, 0);
