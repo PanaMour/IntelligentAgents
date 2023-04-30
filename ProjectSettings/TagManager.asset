@@ -8,6 +8,7 @@ TagManager:
   - Bank
   - Energy Pot
   - Gold
+  - Fuel
   layers:
   - Default
   - TransparentFX
