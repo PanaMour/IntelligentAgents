@@ -19,6 +19,8 @@ public class EnvironmentGenerator : MonoBehaviour
     public GameObject goldPrefab;
     public GameObject energypotPrefab;
     public GameObject ATMlogo;
+    public GameObject FuelText;
+    public GameObject SnackText;
     private GameObject groundObject;
     public static TextAsset environmentData;
 
@@ -59,9 +61,12 @@ public class EnvironmentGenerator : MonoBehaviour
                         bank.tag = "Bank";
                         break;
                     case 'F':
+                        Vector3 positionFuel = position + new Vector3(0f, 1.6f, 0f);
                         position += new Vector3(0, -0.5f, 0);
                         GameObject fuel = Instantiate(fuelPrefab, position, Quaternion.identity);
+                        GameObject fuelText = Instantiate(FuelText, positionFuel, Quaternion.identity);
                         fuel.tag = "Fuel";
+                        fuelText.transform.rotation = Quaternion.Euler(90f, 0, 0);
                         break;
                     case 'P':
                         position += new Vector3(0.2f, -0.5f, 0);
@@ -70,9 +75,12 @@ public class EnvironmentGenerator : MonoBehaviour
                         phoneBooth.tag = "Phone Booth";
                         break;
                     case 'V':
+                        Vector3 positionSnack = position + new Vector3(0f, 2f, 0f);
                         position += new Vector3(0f, -0.5f, 0);
                         GameObject vendingMachine = Instantiate(vendingmachinePrefab, position, Quaternion.identity);
+                        GameObject snackText = Instantiate(SnackText, positionSnack, Quaternion.identity);
                         vendingMachine.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+                        snackText.transform.rotation = Quaternion.Euler(90f, 0, 0);
                         vendingMachine.tag = "Vending Machine";
                         break;
                     case 'W':
