@@ -27,6 +27,7 @@ public class EnvironmentGenerator : MonoBehaviour
     public GameObject HouseText;
     private GameObject groundObject;
     public Material groundMaterial;
+    public int agentCount = 0;
     public static TextAsset environmentData;
 
     private void Start()
@@ -137,6 +138,7 @@ public class EnvironmentGenerator : MonoBehaviour
                         houseText.transform.rotation = Quaternion.Euler(90f, 0, 0);
                         AgentController agentController = agentObj.AddComponent<AgentController>();
                         agentController.SetHouse(houseObj);
+                        agentCount++;
                         break;
                 }
             }
