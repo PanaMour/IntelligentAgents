@@ -1395,6 +1395,10 @@ MonoBehaviour:
     type: 3}
   SnackText: {fileID: 8479099049876206255, guid: 26afba122883f5e44af8818eacf717e5,
     type: 3}
+  PhoneText: {fileID: 8479099049876206255, guid: 8b34fed0b7dedb543824dfcf07ab9780,
+    type: 3}
+  HouseText: {fileID: 8479099049876206255, guid: 9f25085564f5172428849aab30edf21c,
+    type: 3}
 --- !u!4 &1367708049
 Transform:
   m_ObjectHideFlags: 0

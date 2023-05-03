@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class EnvironmentGenerator : MonoBehaviour
@@ -21,7 +23,10 @@ public class EnvironmentGenerator : MonoBehaviour
     public GameObject ATMlogo;
     public GameObject FuelText;
     public GameObject SnackText;
+    public GameObject PhoneText;
+    public GameObject HouseText;
     private GameObject groundObject;
+    public Material groundMaterial;
     public static TextAsset environmentData;
 
     private void Start()
@@ -38,6 +43,7 @@ public class EnvironmentGenerator : MonoBehaviour
         Vector3 groundScale = new Vector3(numCols, 1, numRows);
         Vector3 groundPosition = new Vector3(numCols / 2f - 0.5f, -1f, -numRows / 2f + 0.5f);
         groundObject = Instantiate(groundPrefab, groundPosition, Quaternion.identity);
+        groundObject.GetComponent<Renderer>().material = groundMaterial;
         groundObject.transform.localScale = groundScale;
         groundObject.name = "Ground";
         for (int i = 0; i < numRows; i++)
@@ -69,13 +75,16 @@ public class EnvironmentGenerator : MonoBehaviour
                         fuelText.transform.rotation = Quaternion.Euler(90f, 0, 0);
                         break;
                     case 'P':
+                        Vector3 positionPhone = position + new Vector3(0.2f, 1f, 0f);
                         position += new Vector3(0.2f, -0.5f, 0);
                         GameObject phoneBooth = Instantiate(phoneboothPrefab, position, Quaternion.identity);
+                        GameObject phoneText = Instantiate(PhoneText, positionPhone, Quaternion.identity);
                         phoneBooth.transform.rotation = Quaternion.Euler(-90f, 180f, 0f);
+                        phoneText.transform.rotation = Quaternion.Euler(90f, 0, 0);
                         phoneBooth.tag = "Phone Booth";
                         break;
                     case 'V':
-                        Vector3 positionSnack = position + new Vector3(0f, 2f, 0f);
+                        Vector3 positionSnack = position + new Vector3(0f, 2f, -0.05f);
                         position += new Vector3(0f, -0.5f, 0);
                         GameObject vendingMachine = Instantiate(vendingmachinePrefab, position, Quaternion.identity);
                         GameObject snackText = Instantiate(SnackText, positionSnack, Quaternion.identity);
@@ -110,10 +119,14 @@ public class EnvironmentGenerator : MonoBehaviour
                     case '7':
                     case '8':
                     case '9':
+                        Vector3 positionHouse = position + new Vector3(0f, -0.45f, 0.45f);
                         GameObject houseObj = Instantiate(housePrefab, new Vector3(j, -0.5f, -i), Quaternion.identity);
                         GameObject agentObj = Instantiate(agentPrefab, new Vector3(j, -0.5f, -i), Quaternion.identity);
+                        GameObject houseText = Instantiate(HouseText, positionHouse, Quaternion.identity);
                         agentObj.name = "Agent_" + symbol;
                         agentObj.tag = "Agent";
+                        houseText.GetComponent<TextMeshPro>().text = symbol.ToString();
+                        houseText.transform.rotation = Quaternion.Euler(90f, 0, 0);
                         AgentController agentController = agentObj.AddComponent<AgentController>();
                         agentController.SetHouse(houseObj);
                         break;
