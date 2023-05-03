@@ -1399,6 +1399,7 @@ MonoBehaviour:
     type: 3}
   HouseText: {fileID: 8479099049876206255, guid: 9f25085564f5172428849aab30edf21c,
     type: 3}
+  groundMaterial: {fileID: 2100000, guid: 8534e781fbe18b042a9c40929c232f8c, type: 2}
 --- !u!4 &1367708049
 Transform:
   m_ObjectHideFlags: 0
