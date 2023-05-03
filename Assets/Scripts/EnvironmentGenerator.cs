@@ -41,8 +41,8 @@ public class EnvironmentGenerator : MonoBehaviour
         int numRows = lines.Length;
         int numCols = lines[0].Length - 1; // Subtract 1 for the newline character
         Vector3 groundScale = new Vector3(numCols, 1, numRows);
-        Vector3 groundPosition = new Vector3(numCols / 2f - 0.5f, -1f, -numRows / 2f + 0.5f);
-        groundObject = Instantiate(groundPrefab, groundPosition, Quaternion.identity);
+        Vector3 groundPositionCamera = new Vector3(numCols / 2f - 0.5f, -1.5f, -numRows / 2f + 0.5f);
+        groundObject = Instantiate(groundPrefab, groundPositionCamera, Quaternion.identity);
         groundObject.GetComponent<Renderer>().material = groundMaterial;
         groundObject.transform.localScale = groundScale;
         groundObject.name = "Ground";
@@ -52,8 +52,16 @@ public class EnvironmentGenerator : MonoBehaviour
             {
                 char symbol = lines[i][j];
                 Vector3 position = new Vector3(j, 0, -i);
+                Vector3 groundPosition = new Vector3(j, -1, -i); // Position for the ground block
+                GameObject groundBlock = Instantiate(groundPrefab, groundPosition, Quaternion.identity); // Instantiate the ground block
+                groundBlock.GetComponent<Renderer>().material = groundMaterial; // Set the material to ground material
+
                 switch (symbol)
                 {
+                    case ' ':
+                        GameObject groundBlank = Instantiate(groundPrefab, groundPosition, Quaternion.identity); // Instantiate the ground block
+                        groundBlank.GetComponent<Renderer>().material = groundMaterial; // Set the material to ground material
+                        break;
                     case '*':
                         Instantiate(wallPrefab, position, Quaternion.identity);
                         break;
@@ -67,7 +75,7 @@ public class EnvironmentGenerator : MonoBehaviour
                         bank.tag = "Bank";
                         break;
                     case 'F':
-                        Vector3 positionFuel = position + new Vector3(0f, 1.6f, 0f);
+                        Vector3 positionFuel = position + new Vector3(0.05f, 1.07f, 0f);
                         position += new Vector3(0, -0.5f, 0);
                         GameObject fuel = Instantiate(fuelPrefab, position, Quaternion.identity);
                         GameObject fuelText = Instantiate(FuelText, positionFuel, Quaternion.identity);
@@ -84,7 +92,7 @@ public class EnvironmentGenerator : MonoBehaviour
                         phoneBooth.tag = "Phone Booth";
                         break;
                     case 'V':
-                        Vector3 positionSnack = position + new Vector3(0f, 2f, -0.05f);
+                        Vector3 positionSnack = position + new Vector3(0f, 1.42f, -0.05f);
                         position += new Vector3(0f, -0.5f, 0);
                         GameObject vendingMachine = Instantiate(vendingmachinePrefab, position, Quaternion.identity);
                         GameObject snackText = Instantiate(SnackText, positionSnack, Quaternion.identity);
@@ -119,7 +127,7 @@ public class EnvironmentGenerator : MonoBehaviour
                     case '7':
                     case '8':
                     case '9':
-                        Vector3 positionHouse = position + new Vector3(0f, -0.45f, 0.45f);
+                        Vector3 positionHouse = position + new Vector3(0f, -0.42f, 0.45f);
                         GameObject houseObj = Instantiate(housePrefab, new Vector3(j, -0.5f, -i), Quaternion.identity);
                         GameObject agentObj = Instantiate(agentPrefab, new Vector3(j, -0.5f, -i), Quaternion.identity);
                         GameObject houseText = Instantiate(HouseText, positionHouse, Quaternion.identity);
