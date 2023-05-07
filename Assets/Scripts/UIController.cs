@@ -17,6 +17,8 @@ public class UIController : MonoBehaviour
     private bool isMenuVisible = false;
     private bool isPaused = false;
     public bool hasStarted = false;
+    public bool NextMoveTriggered = false;
+    public AgentController agentController;
 
     void Start()
     {
@@ -66,10 +68,19 @@ public class UIController : MonoBehaviour
             Time.timeScale = 1f; // Continue time
         }
     }
-
-    public void NextMove()
+    public void OnNextMoveButtonClick()
     {
+        Time.timeScale = 1f;
+        GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
 
+        // Execute a single movement for each agent
+        foreach (GameObject agent in agents)
+        {
+            AgentController agentController = agent.GetComponent<AgentController>();
+            agentController.TriggerNextMove();
+            //StartCoroutine(agentController.RandomMovement(agentController.buildingPosition, agentController.symbol));
+
+        }
     }
 
     private void HideUIElements()

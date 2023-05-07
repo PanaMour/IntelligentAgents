@@ -29,6 +29,8 @@ public class AgentController : MonoBehaviour
     private List<GameObject> tradedAgents = new List<GameObject>();
     private Animator animator;
     public bool isPaused = false;
+    public Vector2Int buildingPosition;
+    public string symbol;
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -78,11 +80,11 @@ public class AgentController : MonoBehaviour
         grid.grid[currentPosition.x, currentPosition.y].discovered = true;
 
         // Find the position of the building B
-        Vector2Int buildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
+        buildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
         if (buildingPosition != Vector2Int.zero)
         {
             // Start moving randomly until the agent discovers the location of the building
-            string symbol = grid.grid[buildingPosition.x,buildingPosition.y].symbol;
+            symbol = grid.grid[buildingPosition.x,buildingPosition.y].symbol;
             StartCoroutine(RandomMovement(buildingPosition, symbol));
         }
         else
@@ -96,11 +98,13 @@ public class AgentController : MonoBehaviour
         return Mathf.Sqrt((a.x - b.x) ^ 2 + (a.y - b.y) ^ 2);
     }
 
-    private IEnumerator RandomMovement(Vector2Int buildingPosition, string symbol)
+    public IEnumerator RandomMovement(Vector2Int buildingPosition, string symbol)
     {
         bool foundBuilding = false;
         while (!foundBuilding)
         {
+            if (NextMoveTriggered) { yield return null; }
+
             // Get a list of neighboring nodes
             List<Node> allNeighbors = grid.GetNeighbours(currentPosition);
             energyPotLocations.UnionWith(allNeighbors.FindAll(n => n.symbol == "E"));
@@ -275,7 +279,14 @@ public class AgentController : MonoBehaviour
                 currentPath = Pathfinding.FindPath(grid, currentPosition, currentDestination);
                 StartCoroutine(Movement());
             }
+            if (NextMoveTriggered)
+            {
+                NextMoveTriggered = false;
+                Time.timeScale = 0f;
+                yield break;
+            }
         }
+        
     }
 
     private void BuyKnowledge(GameObject agent)
@@ -311,6 +322,7 @@ public class AgentController : MonoBehaviour
 
     private IEnumerator Movement()
     {
+        if (NextMoveTriggered) { yield return null; }
         foreach (Node n in currentPath)
         {
             Vector3 targetPosition = new Vector3(n.x, transform.position.y, -n.y);
@@ -352,6 +364,13 @@ public class AgentController : MonoBehaviour
                 }
             }
             yield return new WaitForSeconds(delay);
+
+            if (NextMoveTriggered)
+            {
+                NextMoveTriggered = false;
+                Time.timeScale = 0f;
+                yield break;
+            }
         }
         if (energySearching)
         {
@@ -400,6 +419,12 @@ public class AgentController : MonoBehaviour
                 }
             }
         }
+    }
+    public bool NextMoveTriggered = false;
+
+    public void TriggerNextMove()
+    {
+        NextMoveTriggered = true;
     }
 
 
