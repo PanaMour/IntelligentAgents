@@ -12,20 +12,30 @@ public class UIController : MonoBehaviour
     public GameObject UIbuttons;
     public TextMeshProUGUI visibilityButtonText;
     public TextMeshProUGUI pauseButtonText;
-
     public List<GameObject> agentUIElements;
 
     private bool isMenuVisible = false;
     private bool isPaused = false;
+    public bool hasStarted = false;
 
     void Start()
     {
-        visibilityButton.onClick.AddListener(ToggleMenuVisibility);
-        pauseButton.onClick.AddListener(TogglePause);
+        Time.timeScale = 0f;
         UpdateAgentUIElements();
     }
 
-    private void ToggleMenuVisibility()
+    private void Update()
+    {
+        if (isMenuVisible)
+            UpdateAgentUIElements();
+    }
+    public void ToggleStart()
+    {
+        Time.timeScale = 1f;
+        pauseButton.interactable = true;
+        startButton.interactable = false;
+    }
+    public void ToggleMenuVisibility()
     {
         isMenuVisible = !isMenuVisible;
 
@@ -41,20 +51,25 @@ public class UIController : MonoBehaviour
         }
     }
 
-    private void TogglePause()
+    public void TogglePause()
     {
         isPaused = !isPaused;
 
         if (isPaused)
         {
             pauseButtonText.text = "Continue";
-            // Add any code to pause your game here
+            Time.timeScale = 0f; // Stop time
         }
         else
         {
             pauseButtonText.text = "Pause";
-            // Add any code to resume your game here
+            Time.timeScale = 1f; // Continue time
         }
+    }
+
+    public void NextMove()
+    {
+
     }
 
     private void HideUIElements()
@@ -72,26 +87,39 @@ public class UIController : MonoBehaviour
         UpdateAgentUIElements();        
     }
 
-    private void UpdateAgentUIElements()
+    private void UpdateAgentUIElements(){
+    // Hide all agent UI elements initially
+    foreach (GameObject agentUIElement in agentUIElements)
     {
-        // Hide all agent UI elements initially
-        foreach (GameObject agentUIElement in agentUIElements)
+        agentUIElement.SetActive(false);
+    }
+
+    // Get agents from the environment
+    GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
+
+    // Show UI elements for existing agents
+    foreach (GameObject agent in agents)
+    {
+        int agentNumber = int.Parse(agent.name.Substring(agent.name.Length - 1));
+
+        if (agentNumber >= 0 && agentNumber < agentUIElements.Count)
         {
-            agentUIElement.SetActive(false);
-        }
+            
+            // Get the child EnergyX and GoldX TextMeshPro components of the agent UI element
+            Transform energyText = agentUIElements[agentNumber].transform.Find("Energy0");
+            Transform goldText = agentUIElements[agentNumber].transform.Find("Gold0");
 
-        // Get agents from the environment
-        GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
+            // Get the AgentController component of the agent
+            AgentController agentController = agent.GetComponent<AgentController>();
 
-        // Show UI elements for existing agents
-        foreach (GameObject agent in agents)
-        {
-            int agentNumber = int.Parse(agent.name.Substring(agent.name.Length - 1));
+            // Update the Energy and Gold text of the agent UI element
+            energyText.GetComponent<TextMeshProUGUI>().text = agentController.energy + "E";
+            goldText.GetComponent<TextMeshProUGUI>().text = agentController.gold + "G";
 
-            if (agentNumber >= 0 && agentNumber < agentUIElements.Count)
-            {
-                agentUIElements[agentNumber].SetActive(true);
-            }
+            // Show the agent UI element
+            agentUIElements[agentNumber].SetActive(true);
         }
     }
+}
+
 }

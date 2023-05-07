@@ -28,6 +28,7 @@ public class AgentController : MonoBehaviour
     [SerializeField] private int energyPotStorage = 0;
     private List<GameObject> tradedAgents = new List<GameObject>();
     private Animator animator;
+    public bool isPaused = false;
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -387,6 +388,10 @@ public class AgentController : MonoBehaviour
                 {
                     // Start moving randomly until the agent discovers the location of the building
                     string symbol = grid.grid[buildingPosition.x, buildingPosition.y].symbol;
+                    if (isPaused)
+                    {
+                        Time.timeScale = 0f;
+                    }
                     StartCoroutine(RandomMovement(buildingPosition, symbol));
                 }
                 else
@@ -415,7 +420,7 @@ public class AgentController : MonoBehaviour
                 {
                     // Start moving randomly until the agent discovers the location of the building B
                     string symbol = grid.grid[buildingPosition.x,buildingPosition.y].symbol;
-            StartCoroutine(RandomMovement(buildingPosition, symbol));
+                    StartCoroutine(RandomMovement(buildingPosition, symbol));
                 }
                 else
                 {
