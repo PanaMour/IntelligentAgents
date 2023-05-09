@@ -31,6 +31,8 @@ public class AgentController : MonoBehaviour
     public bool isPaused = false;
     public Vector2Int buildingPosition;
     public string symbol;
+    public bool NextMoveTriggered = false;
+    public bool Continue = false;
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -79,7 +81,7 @@ public class AgentController : MonoBehaviour
         grid.grid[currentPosition.x, currentPosition.y].visited = true;
         grid.grid[currentPosition.x, currentPosition.y].discovered = true;
 
-        // Find the position of the building B
+        // Find the position of the building
         buildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
         if (buildingPosition != Vector2Int.zero)
         {
@@ -283,8 +285,11 @@ public class AgentController : MonoBehaviour
             {
                 NextMoveTriggered = false;
                 Time.timeScale = 0f;
-                yield break;
+                UIController uiController = FindObjectOfType<UIController>();
+                uiController.pauseButton.interactable = true;
+                yield return null;
             }
+            while (!NextMoveTriggered && !Continue) { yield return null; }
         }
         
     }
@@ -369,8 +374,11 @@ public class AgentController : MonoBehaviour
             {
                 NextMoveTriggered = false;
                 Time.timeScale = 0f;
-                yield break;
+                UIController uiController = FindObjectOfType<UIController>();
+                uiController.pauseButton.interactable = true;
+                yield return null;
             }
+            while (!NextMoveTriggered && !Continue) { yield return null; }
         }
         if (energySearching)
         {
@@ -420,7 +428,6 @@ public class AgentController : MonoBehaviour
             }
         }
     }
-    public bool NextMoveTriggered = false;
 
     public void TriggerNextMove()
     {

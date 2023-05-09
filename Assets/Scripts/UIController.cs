@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor.PackageManager;
 
 public class UIController : MonoBehaviour
 {
     public Button startButton;
     public Button visibilityButton;
     public Button pauseButton;
+    public Button nextmoveButton;
     public Button overviewButton;
     public GameObject UIbuttons;
     public TextMeshProUGUI visibilityButtonText;
@@ -36,6 +38,13 @@ public class UIController : MonoBehaviour
         Time.timeScale = 1f;
         pauseButton.interactable = true;
         startButton.interactable = false;
+        GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
+        foreach (GameObject agent in agents)
+        {
+            AgentController agentController = agent.GetComponent<AgentController>();
+            agentController.Continue = true;
+
+        }
     }
     public void ToggleMenuVisibility()
     {
@@ -59,18 +68,33 @@ public class UIController : MonoBehaviour
 
         if (isPaused)
         {
+            nextmoveButton.interactable = true;
             pauseButtonText.text = "Continue";
-            Time.timeScale = 0f; // Stop time
+            GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
+            foreach (GameObject agent in agents)
+            {
+                AgentController agentController = agent.GetComponent<AgentController>();
+                agentController.Continue = false;
+            }
         }
         else
         {
             pauseButtonText.text = "Pause";
+            nextmoveButton.interactable = false;
+            GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
+            foreach (GameObject agent in agents)
+            {
+                AgentController agentController = agent.GetComponent<AgentController>();
+                agentController.Continue = true;
+            }
             Time.timeScale = 1f; // Continue time
         }
     }
+
     public void OnNextMoveButtonClick()
     {
         Time.timeScale = 1f;
+        pauseButton.interactable = false;
         GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
 
         // Execute a single movement for each agent
@@ -78,10 +102,9 @@ public class UIController : MonoBehaviour
         {
             AgentController agentController = agent.GetComponent<AgentController>();
             agentController.TriggerNextMove();
-            //StartCoroutine(agentController.RandomMovement(agentController.buildingPosition, agentController.symbol));
-
         }
     }
+
 
     private void HideUIElements()
     {

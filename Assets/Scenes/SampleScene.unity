@@ -202,7 +202,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 55005968}
   m_OnClick:
     m_PersistentCalls:
@@ -304,6 +304,9 @@ MonoBehaviour:
   - {fileID: 944135361}
   - {fileID: 725650257}
   - {fileID: 636275589}
+  hasStarted: 0
+  NextMoveTriggered: 0
+  agentController: {fileID: 0}
 --- !u!4 &56328036
 Transform:
   m_ObjectHideFlags: 0
@@ -5008,7 +5011,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1656552485}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 56328035}
+        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
+        m_MethodName: ToggleStart
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1656552485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5407,7 +5422,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 56328035}
         m_TargetAssemblyTypeName: UIController, Assembly-CSharp
-        m_MethodName: ToggleVisibility
+        m_MethodName: ToggleMenuVisibility
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6477,7 +6492,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1991406736}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 56328035}
+        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
+        m_MethodName: OnNextMoveButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1991406736
 MonoBehaviour:
   m_ObjectHideFlags: 0
