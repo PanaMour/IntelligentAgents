@@ -12,6 +12,7 @@ TagManager:
   - Phone Booth
   - Vending Machiine
   - Water Cooler
+  - Camera
   layers:
   - Default
   - TransparentFX

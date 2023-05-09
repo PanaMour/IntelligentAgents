@@ -20,6 +20,10 @@ public class TopDownCamera : MonoBehaviour
     {
         if (ground != null)
         {
+            if (Camera.main != GetComponent<Camera>())
+            {
+                return;
+            }
             // Move camera horizontally with arrow keys or WASD
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");

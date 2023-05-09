@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEditor.PackageManager;
+using System.Text.RegularExpressions;
 
 public class UIController : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class UIController : MonoBehaviour
     public bool hasStarted = false;
     public bool NextMoveTriggered = false;
     public AgentController agentController;
-
+    public Camera mainCamera;
     void Start()
     {
         Time.timeScale = 0f;
@@ -154,6 +155,58 @@ public class UIController : MonoBehaviour
             agentUIElements[agentNumber].SetActive(true);
         }
     }
-}
+    }
+
+    public void AgentCamera(GameObject agentObject)
+    {
+        // Get the name of the agent object
+        string agentName = agentObject.name;
+
+        // Check if the name matches the pattern "AgentX"
+        if (Regex.IsMatch(agentName, "^Agent[0-9]$"))
+        {
+            // Get the agent number from the name
+            int agentNumber = int.Parse(agentName.Substring(agentName.Length - 1));
+
+            // Get the corresponding camera
+            GameObject agentCamera = GameObject.Find("AgentCamera_" + agentNumber);
+            GameObject[] cameras = GameObject.FindGameObjectsWithTag("Camera");
+            foreach (GameObject camera in cameras)
+            {
+                if (camera.gameObject == agentCamera)
+                {
+                    camera.GetComponent<Camera>().enabled = true;
+                }
+                else
+                {
+                    camera.GetComponent<Camera>().enabled = false;
+                }
+
+            }
+            // Activate the camera and deactivate all other cameras
+            foreach (Camera camera in Camera.allCameras)
+            {
+                if (camera.gameObject == agentCamera)
+                {
+                    camera.enabled = true;
+                }
+                else
+                {
+                    camera.enabled = false;
+                }
+            }
+        }
+    }
+
+    public void Overview()
+    {
+        mainCamera.enabled = true;
+        GameObject[] cameras = GameObject.FindGameObjectsWithTag("Camera");
+        foreach (GameObject camera in cameras)
+        {
+            camera.GetComponent<Camera>().enabled = false;
+
+        }
+    }
 
 }

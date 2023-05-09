@@ -33,8 +33,10 @@ public class AgentController : MonoBehaviour
     public string symbol;
     public bool NextMoveTriggered = false;
     public bool Continue = false;
+    public Camera mainCamera;
     private void Start()
     {
+        mainCamera = Camera.main;
         animator = GetComponent<Animator>();
         energyPotLocations = new HashSet<Node>();
         planFileName = "agent_" + gameObject.name.Split('_')[1] + "_plan";
@@ -439,6 +441,7 @@ public class AgentController : MonoBehaviour
     {
         if (energy <= 0)
         {
+            mainCamera.enabled = true;
             Destroy(gameObject);
             return;
         }

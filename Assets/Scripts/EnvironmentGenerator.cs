@@ -27,6 +27,8 @@ public class EnvironmentGenerator : MonoBehaviour
     public GameObject HouseText;
     private GameObject groundObject;
     public Material groundMaterial;
+    public GameObject agentCameraPrefab;
+
     public int agentCount = 0;
     public static TextAsset environmentData;
 
@@ -134,6 +136,8 @@ public class EnvironmentGenerator : MonoBehaviour
                         GameObject houseText = Instantiate(HouseText, positionHouse, Quaternion.identity);
                         agentObj.name = "Agent_" + symbol;
                         agentObj.tag = "Agent";
+                        GameObject agentCamera = agentObj.gameObject.transform.Find("AgentCamera").gameObject;
+                        agentCamera.name = "AgentCamera_" + symbol;
                         houseText.GetComponent<TextMeshPro>().text = symbol.ToString();
                         houseText.transform.rotation = Quaternion.Euler(90f, 0, 0);
                         AgentController agentController = agentObj.AddComponent<AgentController>();
