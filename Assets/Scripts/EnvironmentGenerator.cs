@@ -28,9 +28,11 @@ public class EnvironmentGenerator : MonoBehaviour
     private GameObject groundObject;
     public Material groundMaterial;
     public GameObject agentCameraPrefab;
+    public GameObject fogPrefab;
 
     public int agentCount = 0;
     public static TextAsset environmentData;
+    public GameObject[,] fogBlocks;
 
     private void Start()
     {
@@ -43,6 +45,7 @@ public class EnvironmentGenerator : MonoBehaviour
         string[] lines = environmentText.Split('\n');
         int numRows = lines.Length;
         int numCols = lines[0].Length - 1; // Subtract 1 for the newline character
+        fogBlocks = new GameObject[numRows, numCols];
         Vector3 groundScale = new Vector3(numCols, 1, numRows);
         Vector3 groundPositionCamera = new Vector3(numCols / 2f - 0.5f, -1.5f, -numRows / 2f + 0.5f);
         groundObject = Instantiate(groundPrefab, groundPositionCamera, Quaternion.identity);
@@ -55,8 +58,15 @@ public class EnvironmentGenerator : MonoBehaviour
             {
                 char symbol = lines[i][j];
                 Vector3 position = new Vector3(j, 0, -i);
-                Vector3 groundPosition = new Vector3(j, -1, -i); // Position for the ground block
+                Vector3 groundPosition = new Vector3(j, -1, -i); // Position for the ground block=
                 GameObject groundBlock = Instantiate(groundPrefab, groundPosition, Quaternion.identity); // Instantiate the ground block
+                if (symbol != '*')
+                {
+                    Vector3 fogPosition = new Vector3(j, 0, -i);
+                    GameObject fogBlock = Instantiate(fogPrefab, fogPosition, Quaternion.identity); // Instantiate the ground block
+                    fogBlocks[j,i] = fogBlock;
+                    fogBlock.SetActive(false);
+                }
                 groundBlock.GetComponent<Renderer>().material = groundMaterial; // Set the material to ground material
 
                 switch (symbol)

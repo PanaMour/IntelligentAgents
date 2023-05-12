@@ -3,7 +3,12 @@ guid: 11820c62aaa0f154d9a3bf174666e49b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - house: {instanceID: 0}
+  - planData: {instanceID: 0}
+  - mainCamera: {instanceID: 0}
+  - fogPrefab: {fileID: 3232564120067614096, guid: fe5aa75f30984e64dafc859900f06d10,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

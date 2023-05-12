@@ -34,8 +34,12 @@ public class AgentController : MonoBehaviour
     public bool NextMoveTriggered = false;
     public bool Continue = false;
     public Camera mainCamera;
+    public GameObject environmentGenerator;
+    public GameObject[,] fogBlocks;
+    public bool hasStarted = false;
     private void Start()
     {
+        environmentGenerator = GameObject.Find("EnvironmentGenerator");
         mainCamera = Camera.main;
         animator = GetComponent<Animator>();
         energyPotLocations = new HashSet<Node>();
@@ -82,6 +86,10 @@ public class AgentController : MonoBehaviour
         grid.grid[currentPosition.x, currentPosition.y].walkable = true;
         grid.grid[currentPosition.x, currentPosition.y].visited = true;
         grid.grid[currentPosition.x, currentPosition.y].discovered = true;
+        grid.grid[currentPosition.x+1, currentPosition.y].discovered = true;
+        grid.grid[currentPosition.x-1, currentPosition.y].discovered = true;
+        grid.grid[currentPosition.x, currentPosition.y+1].discovered = true;
+        grid.grid[currentPosition.x, currentPosition.y-1].discovered = true;
 
         // Find the position of the building
         buildingPosition = GetBuildingPosition(plan[currentBuildingIndex]);
@@ -332,6 +340,12 @@ public class AgentController : MonoBehaviour
         if (NextMoveTriggered) { yield return null; }
         foreach (Node n in currentPath)
         {
+            grid.grid[n.x, n.y].discovered = true;
+            grid.grid[n.x, n.y].visited = true;
+            grid.grid[n.x + 1, n.y].discovered = true;
+            grid.grid[n.x - 1, n.y].discovered = true;
+            grid.grid[n.x, n.y + 1].discovered = true;
+            grid.grid[n.x, n.y - 1].discovered = true;
             Vector3 targetPosition = new Vector3(n.x, transform.position.y, -n.y);
             while (transform.position != targetPosition)
             {
@@ -446,6 +460,46 @@ public class AgentController : MonoBehaviour
             return;
         }
 
+        if (gameObject.GetComponentInChildren<Camera>().enabled)
+        {
+            fogBlocks = environmentGenerator.GetComponent<EnvironmentGenerator>().fogBlocks;
+
+            if (hasStarted)
+            {
+                for (int i = 1; i < fogBlocks.GetLength(0) - 1; i++)
+                {
+                    for (int j = 1; j < fogBlocks.GetLength(1) - 1; j++)
+                    {
+                        if (!grid.grid[i, j].discovered)
+                        {
+                            fogBlocks[i, j].SetActive(true);
+                        }
+                        else
+                        {
+                            fogBlocks[i, j].SetActive(false);
+                        }
+                    }
+                }
+                
+            }
+            else
+            {
+
+                for (int i = 1; i < fogBlocks.GetLength(0) - 1; i++)
+                {
+                    for (int j = 1; j < fogBlocks.GetLength(1) - 1; j++)
+                    {
+                        fogBlocks[i, j].SetActive(true);
+                    }
+                }
+                fogBlocks[Mathf.RoundToInt(gameObject.transform.position.x), -Mathf.RoundToInt(gameObject.transform.position.z)].SetActive(false);
+                fogBlocks[Mathf.RoundToInt(gameObject.transform.position.x+1), -Mathf.RoundToInt(gameObject.transform.position.z)].SetActive(false);
+                fogBlocks[Mathf.RoundToInt(gameObject.transform.position.x-1), -Mathf.RoundToInt(gameObject.transform.position.z)].SetActive(false);
+                fogBlocks[Mathf.RoundToInt(gameObject.transform.position.x), -Mathf.RoundToInt(gameObject.transform.position.z+1)].SetActive(false);
+                fogBlocks[Mathf.RoundToInt(gameObject.transform.position.x), -Mathf.RoundToInt(gameObject.transform.position.z-1)].SetActive(false);
+            }
+        }
+
         if (exploring)
         {
             if (currentPath == null)
@@ -499,6 +553,62 @@ public class AgentController : MonoBehaviour
             else
             {
                 Debug.LogError("No bank found in the scene");
+                return Vector2Int.zero;
+            }
+        }
+        else if (buildingIdentifier == "F")
+        {
+            // Return position of bank
+            GameObject[] fuels = GameObject.FindGameObjectsWithTag("Fuel");
+            if (fuels.Length > 0)
+            {
+                return new Vector2Int(Mathf.RoundToInt(fuels[0].transform.position.x), Mathf.RoundToInt(-fuels[0].transform.position.z));
+            }
+            else
+            {
+                Debug.LogError("No fuel found in the scene");
+                return Vector2Int.zero;
+            }
+        }
+        else if (buildingIdentifier == "P")
+        {
+            // Return position of bank
+            GameObject[] phones = GameObject.FindGameObjectsWithTag("Phone Booth");
+            if (phones.Length > 0)
+            {
+                return new Vector2Int(Mathf.RoundToInt(phones[0].transform.position.x), Mathf.RoundToInt(-phones[0].transform.position.z));
+            }
+            else
+            {
+                Debug.LogError("No phone booths found in the scene");
+                return Vector2Int.zero;
+            }
+        }
+        else if (buildingIdentifier == "V")
+        {
+            // Return position of bank
+            GameObject[] snacks = GameObject.FindGameObjectsWithTag("Vending Machine");
+            if (snacks.Length > 0)
+            {
+                return new Vector2Int(Mathf.RoundToInt(snacks[0].transform.position.x), Mathf.RoundToInt(-snacks[0].transform.position.z));
+            }
+            else
+            {
+                Debug.LogError("No vending machines found in the scene");
+                return Vector2Int.zero;
+            }
+        }
+        else if (buildingIdentifier == "W")
+        {
+            // Return position of bank
+            GameObject[] waters = GameObject.FindGameObjectsWithTag("Water Cooler");
+            if (waters.Length > 0)
+            {
+                return new Vector2Int(Mathf.RoundToInt(waters[0].transform.position.x), Mathf.RoundToInt(-waters[0].transform.position.z));
+            }
+            else
+            {
+                Debug.LogError("No water coolers found in the scene");
                 return Vector2Int.zero;
             }
         }

@@ -23,6 +23,8 @@ public class UIController : MonoBehaviour
     public bool NextMoveTriggered = false;
     public AgentController agentController;
     public Camera mainCamera;
+    public GameObject EnvironmentGenerator;
+    public GameObject[,] fogBlocks;
     void Start()
     {
         Time.timeScale = 0f;
@@ -44,6 +46,7 @@ public class UIController : MonoBehaviour
         {
             AgentController agentController = agent.GetComponent<AgentController>();
             agentController.Continue = true;
+            agentController.hasStarted = true;
 
         }
     }
@@ -200,6 +203,16 @@ public class UIController : MonoBehaviour
 
     public void Overview()
     {
+        fogBlocks = EnvironmentGenerator.GetComponent<EnvironmentGenerator>().fogBlocks;
+
+        for (int i = 1; i < fogBlocks.GetLength(0) - 1; i++)
+        {
+            for (int j = 1; j < fogBlocks.GetLength(1) - 1; j++)
+            {
+                fogBlocks[i, j].SetActive(false);
+            }
+        }
+
         mainCamera.enabled = true;
         GameObject[] cameras = GameObject.FindGameObjectsWithTag("Camera");
         foreach (GameObject camera in cameras)

@@ -10,9 +10,10 @@ TagManager:
   - Gold
   - Fuel
   - Phone Booth
-  - Vending Machiine
   - Water Cooler
   - Camera
+  - Fog
+  - Vending Machine
   layers:
   - Default
   - TransparentFX
