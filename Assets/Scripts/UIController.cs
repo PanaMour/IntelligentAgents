@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEditor.PackageManager;
 using System.Text.RegularExpressions;
 
 public class UIController : MonoBehaviour
@@ -47,7 +46,6 @@ public class UIController : MonoBehaviour
             AgentController agentController = agent.GetComponent<AgentController>();
             agentController.Continue = true;
             agentController.hasStarted = true;
-
         }
     }
     public void ToggleMenuVisibility()
