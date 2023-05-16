@@ -37,6 +37,8 @@ public class AgentController : MonoBehaviour
     public GameObject environmentGenerator;
     public GameObject[,] fogBlocks;
     public bool hasStarted = false;
+    string environment = "";
+    string fileContents = "";
     private void Start()
     {
         environmentGenerator = GameObject.Find("EnvironmentGenerator");
@@ -80,9 +82,20 @@ public class AgentController : MonoBehaviour
 
         // Set the current position of the agent based on its initial position in the grid
         currentPosition = new Node(" ", Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(-transform.position.z));
+        environment = PlayerPrefs.GetString("environment");
+        if (System.IO.File.Exists(environment))
+        {
+            // Read the file contents
+            fileContents = System.IO.File.ReadAllText(environment);
 
-        TextAsset environmentData = Resources.Load<TextAsset>(environmentTextFile);
-        grid = new Grid(environmentData.text, currentPosition);
+            // Use the file contents as needed
+            Debug.Log("File Contents: " + fileContents);
+        }
+        else
+        {
+            Debug.LogWarning("File not found at path: " + environment);
+        }
+        grid = new Grid(fileContents, currentPosition);
         grid.grid[currentPosition.x, currentPosition.y].walkable = true;
         grid.grid[currentPosition.x, currentPosition.y].visited = true;
         grid.grid[currentPosition.x, currentPosition.y].discovered = true;
@@ -528,7 +541,20 @@ public class AgentController : MonoBehaviour
         int buildingIndex;
         if (int.TryParse(buildingIdentifier, out buildingIndex))
         {
-            string[] lines = EnvironmentGenerator.environmentData.text.Split('\n');
+            environment = PlayerPrefs.GetString("environment");
+            if (System.IO.File.Exists(environment))
+            {
+                // Read the file contents
+                fileContents = System.IO.File.ReadAllText(environment);
+
+                // Use the file contents as needed
+                Debug.Log("File Contents: " + fileContents);
+            }
+            else
+            {
+                Debug.LogWarning("File not found at path: " + environment);
+            }
+            string[] lines = fileContents.Split('\n');
             for (int i = 0; i < lines.Length; i++)
             {
                 for (int j = 0; j < lines[i].Length; j++)

@@ -1,0 +1,3 @@
+BEGINPLAN agent number 5
+building B
+ENDPLAN

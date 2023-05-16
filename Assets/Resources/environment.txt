@@ -1,10 +1,100 @@
-**********
-*        *
-* B      *
-*   P    *
-* 1    F *
-*        *
-*  E   W *
-* 0G     *
-*        *
-**********
+****************************************************************************************************
+*                                           G                                G                     *
+*         0                        V P                      G                                      *
+*      F                    E                                                                      *
+*                         G       E       V                                             E        V *
+*          E           G                                                             G             *
+*G                                                                           G                     *
+*                                                                          P                       *
+*          G                                    E       E                                          *
+*              G                              G               G                             G      *
+*                                        G     E             G                                     *
+*                                           W                                                  G  1*
+*                                F                    E                                            *
+*                                                                         W   F      G             *
+*                                   G            E                                                 *
+*                             V                         B                                          *
+*                                                          G                                   G   *
+*                                E    E                                            G               *
+*                         E               E       G      G              G                          *
+*                 G                                   G                                            *
+* E                                   G                      E    F W                              *
+*                                        G                                                         *
+*                      E      E E                               V                                  *
+*                                                  E                                G              *
+*                                                                                           E      *
+*                  E     P                                                                         *
+*                                       E    E                                                     *
+*                           G                 V 2 G                                                *
+*                    E                  W                          E                              E*
+*     G                         E                                                                  *
+*        W                                                                    E                    *
+*                          E                                 G   G                                 *
+*                                                    W                                             *
+*                          G                                                   G                   *
+*                                                                 P                                *
+*   E                                    F                                     G  E                *
+*                                             G                                                    *
+*   G   G                 G             E                                                     P    *
+*                                     E                                   W                        *
+*                       G                E          E                        G                     *
+*                                 G                                                                *
+*    F                                P                  G                                         *
+*                                                                                       G          *
+*   B                                                                                              *
+*                   E                        G                       G                   G     G   *
+*                                                                                                  *
+*                                     V                     G             F        W               *
+*  G                        G          G                                                  E        *
+*E                            E                                                                    *
+*           G       E              4                                          G                    *
+*                                                                   F                              *
+*                E                           E    P                                                *
+*                              G                                   E G                             *
+*  5                     F        G                                                                *
+*             G                         G                          G F                             *
+*                                                              G                                   *
+*                                                   V                            F                 *
+*              E                                         G                                     E   *
+*                              E       G                                    E                      *
+*  G                   E                                                   G                       *
+*                                                               E     F            W               *
+*                                                  G                                               *
+*      E                         E                                                                 *
+*                             G                            W             E                         *
+*        G            G             G                                           E                  *
+*       G                                                            E                         E   *
+*                    P                                                                             *
+*                          W                                 G                                     *
+*                           W                                          G           E               *
+*                         6  G              E           G                            E             *
+*                                             7                              F                     *
+*   G                                                   W                         E                *
+* E                                                                       F   G              E     *
+*                                                     G                                            *
+*         V  G                  W                                                      G           *
+*                                             G                                                    *
+*                          V    E                                                                  *
+*                                       G                   E        E                             *
+*                           E                      E                    E           E              *
+*         E        E                                                                         E     *
+*                                  W                                                               *
+* E                                           E              G           G                       F *
+*                                                                                                  *
+*                G                                     G                  E    E                   *
+*                                                            G                        E   W        *
+*        E       E                       G                               8                         *
+*E                                                                                                 *
+*                                                           E                                      *
+*        E P                                  E                                          G P       *
+*           G                                                                          F           *
+*     W                                                          G                                 *
+*G                                                 G                                             G *
+*                  W              G                               G                         E      *
+*F                                                        G             E                          *
+*                                         E              G                       B                 *
+*       G                                                                           E              *
+*    B         P                                                  G              E                 *
+*                                                                             G E                  *
+*                                                               G         G                        *
+****************************************************************************************************

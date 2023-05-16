@@ -33,11 +33,24 @@ public class EnvironmentGenerator : MonoBehaviour
     public int agentCount = 0;
     public static TextAsset environmentData;
     public GameObject[,] fogBlocks;
-
+    string environment = "";
+    string fileContents = "";
     private void Start()
     {
-        environmentData = Resources.Load<TextAsset>(environmentTextFile);
-        ParseEnvironment(environmentData.text);
+        environment = PlayerPrefs.GetString("environment");
+        if (System.IO.File.Exists(environment))
+        {
+            // Read the file contents
+            fileContents = System.IO.File.ReadAllText(environment);
+
+            // Use the file contents as needed
+            Debug.Log("File Contents: " + fileContents);
+        }
+        else
+        {
+            Debug.LogWarning("File not found at path: " + environment);
+        }
+        ParseEnvironment(fileContents);
     }
 
     public void ParseEnvironment(string environmentText)
@@ -45,7 +58,7 @@ public class EnvironmentGenerator : MonoBehaviour
         string[] lines = environmentText.Split('\n');
         int numRows = lines.Length;
         int numCols = lines[0].Length - 1; // Subtract 1 for the newline character
-        fogBlocks = new GameObject[numRows, numCols];
+        fogBlocks = new GameObject[numCols, numRows];
         Vector3 groundScale = new Vector3(numCols, 1, numRows);
         Vector3 groundPositionCamera = new Vector3(numCols / 2f - 0.5f, -1.5f, -numRows / 2f + 0.5f);
         groundObject = Instantiate(groundPrefab, groundPositionCamera, Quaternion.identity);

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Text.RegularExpressions;
+using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class UIController : MonoBehaviour
     public TextMeshProUGUI visibilityButtonText;
     public TextMeshProUGUI pauseButtonText;
     public List<GameObject> agentUIElements;
+    public List<GameObject> statagentUIElements;
 
     private bool isMenuVisible = false;
     private bool isPaused = false;
@@ -24,9 +26,12 @@ public class UIController : MonoBehaviour
     public Camera mainCamera;
     public GameObject EnvironmentGenerator;
     public GameObject[,] fogBlocks;
-    void Start()
+    private void Awake()
     {
         Time.timeScale = 0f;
+    }
+    void Start()
+    {
         UpdateAgentUIElements();
     }
 
@@ -62,6 +67,11 @@ public class UIController : MonoBehaviour
             visibilityButtonText.text = "Show Menu";
             HideUIElements();
         }
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void TogglePause()
@@ -154,6 +164,7 @@ public class UIController : MonoBehaviour
 
             // Show the agent UI element
             agentUIElements[agentNumber].SetActive(true);
+            statagentUIElements[agentNumber].SetActive(true);
         }
     }
     }
