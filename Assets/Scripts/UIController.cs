@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Text.RegularExpressions;
 using UnityEngine.SceneManagement;
+using UnityEditor.PackageManager;
 
 public class UIController : MonoBehaviour
 {
@@ -230,5 +231,32 @@ public class UIController : MonoBehaviour
 
         }
     }
+    public void ToggleStatistics()
+    {
+        GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
+        foreach (GameObject agent in agents)
+        {
+            int agentNumber = int.Parse(agent.name.Substring(agent.name.Length - 1));
+            Debug.Log(agentNumber);
+            if (agentNumber >= 0 && agentNumber < statagentUIElements.Count)
+            {
+                // Get the child EnergyX and GoldX TextMeshPro components of the agent UI element
+                Transform energyText = statagentUIElements[agentNumber].transform.Find("Energy0");
+                Transform goldText = statagentUIElements[agentNumber].transform.Find("Gold0");
+                Transform stepsText = statagentUIElements[agentNumber].transform.Find("Steps");
+                Transform knowledgeText = statagentUIElements[agentNumber].transform.Find("Knowledge");
+                Transform aliveText = statagentUIElements[agentNumber].transform.Find("Alive");
 
+                // Get the AgentController component of the agent
+                AgentController agentController = agent.GetComponent<AgentController>();
+
+                // Update the Energy and Gold text of the agent UI element
+                energyText.GetComponent<TextMeshProUGUI>().text = "Energy Spent: " + agentController.ecount.ToString();
+                goldText.GetComponent<TextMeshProUGUI>().text = "Gold Collected: " + agentController.gcount.ToString();
+                stepsText.GetComponent<TextMeshProUGUI>().text = "Steps: " + agentController.scount.ToString();
+                knowledgeText.GetComponent<TextMeshProUGUI>().text = "Trades: " + agentController.tcount.ToString();
+                aliveText.GetComponent<TextMeshProUGUI>().text = "Alive: " + agentController.acount.ToString();
+            }
+        }
+    }
 }

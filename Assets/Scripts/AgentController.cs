@@ -39,8 +39,19 @@ public class AgentController : MonoBehaviour
     public bool hasStarted = false;
     string environment = "";
     string fileContents = "";
+    public int ecount = 0;
+    public int gcount = 0;
+    public int scount = 0;
+    public int tcount = 0;
+    public bool acount = true;
+    [SerializeField] private GameObject panel;
+    [SerializeField] private GameObject background;
+    private UIController UIController;
     private void Start()
     {
+        UIController = GameObject.Find("UIController").gameObject.GetComponent<UIController>();
+        panel = GameObject.Find("Canvas").transform.Find("Panel").gameObject;
+        background = GameObject.Find("Canvas").transform.Find("Background").gameObject;
         environmentGenerator = GameObject.Find("EnvironmentGenerator");
         mainCamera = Camera.main;
         animator = GetComponent<Animator>();
@@ -184,9 +195,9 @@ public class AgentController : MonoBehaviour
                     {
                         SellEnergy(agent);
                     }
-                    if (agentX == node.x && agentY == node.y && gold >= 20)
+                    if (agentX == node.x && agentY == node.y && gold >= 5)
                     {
-                        gold -= 20;
+                        gold -= 5;
                         BuyKnowledge(agent);
                         break;
                     }
@@ -244,6 +255,7 @@ public class AgentController : MonoBehaviour
                 {
                     nextNode.symbol = " ";
                     gold += 1;
+                    gcount++;
                     GameObject[] goldObj = GameObject.FindGameObjectsWithTag("Gold");
                     foreach (GameObject gold1 in goldObj)
                     {
@@ -263,6 +275,8 @@ public class AgentController : MonoBehaviour
                 }
                 animator.SetBool("isMoving", false);
                 energy -= 1;
+                ecount++;
+                scount++;
                 // Wait for a short delay
                 yield return new WaitForSeconds(delay);
             }
@@ -292,6 +306,8 @@ public class AgentController : MonoBehaviour
                 }
                 animator.SetBool("isMoving", false);
                 energy -= 1;
+                ecount++;
+                scount++;
                 // Wait for a short delay
                 yield return new WaitForSeconds(delay);
             }
@@ -335,6 +351,7 @@ public class AgentController : MonoBehaviour
             }
         }
         tradedAgents.Add(agent);
+        tcount++;
     }
 
     private void SellEnergy(GameObject agent)
@@ -345,12 +362,17 @@ public class AgentController : MonoBehaviour
             agent.GetComponent<AgentController>().energy += 20;
             agent.GetComponent<AgentController>().gold -= 10;
             gold += 10;
+            gcount += 10;
         }
+        tcount++;
     }
 
     private IEnumerator Movement()
     {
+        bool finish = false;
         if (NextMoveTriggered) { yield return null; }
+        Node lastnode = currentPath.LastOrDefault();
+        if (lastnode != null && lastnode.symbol == gameObject.name.Split('_')[1]) finish = true;
         foreach (Node n in currentPath)
         {
             grid.grid[n.x, n.y].discovered = true;
@@ -369,6 +391,8 @@ public class AgentController : MonoBehaviour
             }
             animator.SetBool("isMoving", false);
             energy -= 1;
+            ecount++;
+            scount++;
             if (n.symbol == "E")
             {
                 n.symbol = " ";
@@ -387,6 +411,7 @@ public class AgentController : MonoBehaviour
             {
                 n.symbol = " ";
                 gold += 1;
+                gcount++;
                 GameObject[] goldObj = GameObject.FindGameObjectsWithTag("Gold");
 
                 foreach (GameObject gold1 in goldObj)
@@ -408,6 +433,13 @@ public class AgentController : MonoBehaviour
                 yield return null;
             }
             while (!NextMoveTriggered && !Continue) { yield return null; }
+        }
+        if (finish)
+        {
+            Time.timeScale = 0f;
+            panel.SetActive(true);
+            background.SetActive(false);
+            UIController.ToggleStatistics();
         }
         if (energySearching)
         {
@@ -469,7 +501,8 @@ public class AgentController : MonoBehaviour
         if (energy <= 0)
         {
             mainCamera.enabled = true;
-            Destroy(gameObject);
+            acount = false;
+            gameObject.SetActive(false);
             return;
         }
 
