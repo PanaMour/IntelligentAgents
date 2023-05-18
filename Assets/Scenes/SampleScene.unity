@@ -1204,7 +1204,7 @@ GameObject:
   - component: {fileID: 86691424}
   - component: {fileID: 86691423}
   m_Layer: 5
-  m_Name: Energy0 (1)
+  m_Name: Energy0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1925,7 +1925,7 @@ GameObject:
   - component: {fileID: 237512398}
   - component: {fileID: 237512397}
   m_Layer: 5
-  m_Name: Gold0 (1)
+  m_Name: Gold0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2226,7 +2226,6 @@ RectTransform:
   - {fileID: 725650258}
   - {fileID: 636275590}
   - {fileID: 1926586549}
-  - {fileID: 1920571886}
   m_Father: {fileID: 432517983}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4062,6 +4061,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 250654809}
+  - {fileID: 1920571886}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4352,7 +4352,7 @@ GameObject:
   - component: {fileID: 455487957}
   - component: {fileID: 455487956}
   m_Layer: 5
-  m_Name: Energy0 (1)
+  m_Name: Energy0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4626,7 +4626,7 @@ GameObject:
   - component: {fileID: 558740014}
   - component: {fileID: 558740013}
   m_Layer: 5
-  m_Name: Gold0 (1)
+  m_Name: Gold0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5168,7 +5168,7 @@ GameObject:
   - component: {fileID: 627067543}
   - component: {fileID: 627067542}
   m_Layer: 5
-  m_Name: Gold0 (1)
+  m_Name: Gold0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5846,7 +5846,7 @@ GameObject:
   - component: {fileID: 730109911}
   - component: {fileID: 730109910}
   m_Layer: 5
-  m_Name: Gold0 (1)
+  m_Name: Gold0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5981,7 +5981,7 @@ GameObject:
   - component: {fileID: 739915774}
   - component: {fileID: 739915773}
   m_Layer: 5
-  m_Name: Energy0 (1)
+  m_Name: Energy0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6892,7 +6892,7 @@ GameObject:
   - component: {fileID: 863940056}
   - component: {fileID: 863940055}
   m_Layer: 5
-  m_Name: Energy0 (1)
+  m_Name: Energy0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7029,7 +7029,7 @@ GameObject:
   - component: {fileID: 943993820}
   - component: {fileID: 943993819}
   m_Layer: 5
-  m_Name: Gold0 (1)
+  m_Name: Gold0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7275,7 +7275,7 @@ GameObject:
   - component: {fileID: 975863535}
   - component: {fileID: 975863534}
   m_Layer: 5
-  m_Name: Energy0 (1)
+  m_Name: Energy0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7731,7 +7731,7 @@ MonoBehaviour:
   m_text: Statistics
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: e73a58f6e2794ae7b1b7e50b7fb811b0, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7761,7 +7761,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -7791,7 +7791,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -11.971252, y: 0, z: -491.98706, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -9281,7 +9281,7 @@ GameObject:
   - component: {fileID: 1269943247}
   - component: {fileID: 1269943246}
   m_Layer: 5
-  m_Name: Energy0 (1)
+  m_Name: Energy0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10282,6 +10282,17 @@ MonoBehaviour:
   HouseText: {fileID: 8479099049876206255, guid: 9f25085564f5172428849aab30edf21c,
     type: 3}
   groundMaterial: {fileID: 2100000, guid: 8534e781fbe18b042a9c40929c232f8c, type: 2}
+  materials:
+  - {fileID: 2100000, guid: 22e7fb49e2b49e0418ef97b61b1c8db5, type: 2}
+  - {fileID: 2100000, guid: 9b910879291267447bf11aae0873341e, type: 2}
+  - {fileID: 2100000, guid: 548cd70fe4bf46e49b69e21458fd0711, type: 2}
+  - {fileID: 2100000, guid: e711e2fb4c14924439d3ebe21f5ff01a, type: 2}
+  - {fileID: 2100000, guid: 33feb0cd94934184493e3181ab22a525, type: 2}
+  - {fileID: 2100000, guid: d62014fac7dc17248a9493fcdb279722, type: 2}
+  - {fileID: 2100000, guid: 6ffac847a141125489e16af2c8fd4635, type: 2}
+  - {fileID: 2100000, guid: 93015129694bd5d4faadddfeaa5facda, type: 2}
+  - {fileID: 2100000, guid: 982b63a5eb3ab36449597f672462422c, type: 2}
+  - {fileID: 2100000, guid: d493ce27ea821a044a43e685e314d337, type: 2}
   agentCameraPrefab: {fileID: 3651713158026869422, guid: 2a9c58c67c3104742b3a2d4d4ab17045,
     type: 3}
   fogPrefab: {fileID: 3232564120067614096, guid: fe5aa75f30984e64dafc859900f06d10,
@@ -11398,7 +11409,7 @@ GameObject:
   - component: {fileID: 1497800419}
   - component: {fileID: 1497800418}
   m_Layer: 5
-  m_Name: Gold0 (1)
+  m_Name: Gold0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11670,7 +11681,7 @@ GameObject:
   - component: {fileID: 1513988763}
   - component: {fileID: 1513988762}
   m_Layer: 5
-  m_Name: Gold0 (1)
+  m_Name: Gold0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13290,7 +13301,7 @@ GameObject:
   - component: {fileID: 1708215009}
   - component: {fileID: 1708215008}
   m_Layer: 5
-  m_Name: Energy0 (1)
+  m_Name: Energy0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13427,7 +13438,7 @@ GameObject:
   - component: {fileID: 1713535440}
   - component: {fileID: 1713535439}
   m_Layer: 5
-  m_Name: Energy0 (1)
+  m_Name: Energy0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14244,7 +14255,7 @@ GameObject:
   - component: {fileID: 1806962219}
   - component: {fileID: 1806962218}
   m_Layer: 5
-  m_Name: Gold0 (1)
+  m_Name: Gold0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15047,7 +15058,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1920571885}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -15063,13 +15074,13 @@ RectTransform:
   - {fileID: 1683409047}
   - {fileID: 396104097}
   - {fileID: 1690757310}
-  m_Father: {fileID: 250654809}
-  m_RootOrder: 13
+  m_Father: {fileID: 432517983}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.5, y: 0}
+  m_SizeDelta: {x: -1, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1920571887
 MonoBehaviour:
@@ -15084,7 +15095,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.38644004, b: 1, a: 0.392}
+  m_Color: {r: 0, g: 0.38644004, b: 1, a: 0.88235295}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

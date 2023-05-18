@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,7 @@ public class EnvironmentGenerator : MonoBehaviour
     public GameObject HouseText;
     private GameObject groundObject;
     public Material groundMaterial;
+    public List<Material> materials;
     public GameObject agentCameraPrefab;
     public GameObject fogPrefab;
 
@@ -156,6 +158,12 @@ public class EnvironmentGenerator : MonoBehaviour
                         Vector3 positionHouse = position + new Vector3(0f, -0.42f, 0.45f);
                         GameObject houseObj = Instantiate(housePrefab, new Vector3(j, -0.5f, -i), Quaternion.identity);
                         GameObject agentObj = Instantiate(agentPrefab, new Vector3(j, -0.5f, -i), Quaternion.identity);
+                        GameObject chestplate = agentObj.transform.Find("Armors").Find("Plate1").Find("PlateSet1_Chest").gameObject;
+                        GameObject chestplate2 = agentObj.transform.Find("Armors").Find("StarterClothes").Find("Starter_Chest").gameObject;
+                        Debug.Log(Convert.ToInt32(symbol.ToString()));
+                        houseObj.GetComponent<Renderer>().material = materials[Convert.ToInt32(symbol.ToString())];
+                        chestplate.GetComponent<Renderer>().material = materials[Convert.ToInt32(symbol.ToString())];
+                        chestplate2.GetComponent<Renderer>().material = materials[Convert.ToInt32(symbol.ToString())];
                         GameObject houseText = Instantiate(HouseText, positionHouse, Quaternion.identity);
                         agentObj.name = "Agent_" + symbol;
                         agentObj.tag = "Agent";

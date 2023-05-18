@@ -195,9 +195,9 @@ public class AgentController : MonoBehaviour
                     {
                         SellEnergy(agent);
                     }
-                    if (agentX == node.x && agentY == node.y && gold >= 5)
+                    if (agentX == node.x && agentY == node.y && gold >= 3)
                     {
-                        gold -= 5;
+                        gold -= 3;
                         BuyKnowledge(agent);
                         break;
                     }
@@ -356,13 +356,13 @@ public class AgentController : MonoBehaviour
 
     private void SellEnergy(GameObject agent)
     {
-        if((agent.GetComponent<AgentController>().energy < 30 && agent.GetComponent<AgentController>().gold >= 10) || (agent.GetComponent<AgentController>().energy < 80 && agent.GetComponent<AgentController>().gold >= 30))
+        if((agent.GetComponent<AgentController>().energy < 30 && agent.GetComponent<AgentController>().gold >= 3) || (agent.GetComponent<AgentController>().energy < 80 && agent.GetComponent<AgentController>().gold >= 6))
         {
             energyPotStorage--;
             agent.GetComponent<AgentController>().energy += 20;
-            agent.GetComponent<AgentController>().gold -= 10;
-            gold += 10;
-            gcount += 10;
+            agent.GetComponent<AgentController>().gold -= 3;
+            gold += 3;
+            gcount += 3;
         }
         tcount++;
     }

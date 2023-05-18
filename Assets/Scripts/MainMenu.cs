@@ -28,6 +28,7 @@ public class MainMenu : MonoBehaviour
             filePath = selectedFilePath;
             // Update the UI label to display the selected file path
             filePathLabel.text = filePath;
+            FindAgentNumber(System.IO.File.ReadAllText(filePath));
 
             // Load the file and perform necessary actions
             PlayerPrefs.SetString("environment", filePath);
