@@ -4,6 +4,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+#if !UNITY_EDITOR
+using SFB;
+#endif
 
 public class MainMenu : MonoBehaviour
 {
@@ -18,23 +21,30 @@ public class MainMenu : MonoBehaviour
     }
 
     public void OnLoadFileButtonClicked()
+{
+#if UNITY_EDITOR
+    // Open file selection dialog
+    string selectedFilePath = EditorUtility.OpenFilePanel("Select File", "", "");
+#else
+    // Open file selection dialog using StandaloneFileBrowser
+    string[] paths = StandaloneFileBrowser.OpenFilePanel("Select File", "", "", false);
+    string selectedFilePath = paths.Length > 0 ? paths[0] : "";
+#endif
+
+    if (!string.IsNullOrEmpty(selectedFilePath))
     {
-        // Open file selection dialog
-        string selectedFilePath = EditorUtility.OpenFilePanel("Select File", "", "");
+        // Store the selected file path
+        filePath = selectedFilePath;
+        // Update the UI label to display the selected file path
+        filePathLabel.text = filePath;
+        FindAgentNumber(System.IO.File.ReadAllText(filePath));
 
-        if (!string.IsNullOrEmpty(selectedFilePath))
-        {
-            // Store the selected file path
-            filePath = selectedFilePath;
-            // Update the UI label to display the selected file path
-            filePathLabel.text = filePath;
-            FindAgentNumber(System.IO.File.ReadAllText(filePath));
-
-            // Load the file and perform necessary actions
-            PlayerPrefs.SetString("environment", filePath);
-            PlayerPrefs.Save();
-        }
+        // Load the file and perform necessary actions
+        PlayerPrefs.SetString("environment", filePath);
+        PlayerPrefs.Save();
     }
+}
+
 
     public int FindAgentNumber(string text)
     {
