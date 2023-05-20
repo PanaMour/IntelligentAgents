@@ -502,7 +502,11 @@ public class AgentController : MonoBehaviour
         {
             mainCamera.enabled = true;
             acount = false;
-            gameObject.SetActive(false);
+            gameObject.transform.Find("Armature").gameObject.SetActive(false);
+            gameObject.transform.Find("Mesh").gameObject.SetActive(false);
+            gameObject.transform.Find("Armors").gameObject.SetActive(false);
+            gameObject.transform.Find("AgentCamera_0").gameObject.SetActive(false);
+            StopAllCoroutines();
             return;
         }
 

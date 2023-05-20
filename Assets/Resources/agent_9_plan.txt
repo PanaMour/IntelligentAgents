@@ -1,3 +1,5 @@
 BEGINPLAN agent number 9
+building F
+building V
 building B
 ENDPLAN

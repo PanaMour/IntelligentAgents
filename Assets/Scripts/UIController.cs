@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using TMPro;
 using System.Text.RegularExpressions;
 using UnityEngine.SceneManagement;
-using UnityEditor.PackageManager;
 
 public class UIController : MonoBehaviour
 {

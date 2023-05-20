@@ -1,3 +1,5 @@
 BEGINPLAN agent number 3
-building B
+building P
+building V
+building F
 ENDPLAN

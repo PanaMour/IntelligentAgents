@@ -10,10 +10,15 @@ public class TopDownCamera : MonoBehaviour
     public float maxZoom = 10f;
     public float minZoom = 60f;
 
+    private bool isDragging;
+    private Vector3 dragStartPosition;
+
     private void Start()
     {
         // Set initial camera position and field of view
         Camera.main.fieldOfView = minZoom;
+        transform.position = new Vector3(14.5f,30f,-14.5f);
+        transform.rotation = Quaternion.Euler(90f, 0f, 0f);
     }
 
     private void Update()
@@ -24,6 +29,7 @@ public class TopDownCamera : MonoBehaviour
             {
                 return;
             }
+
             // Move camera horizontally with arrow keys or WASD
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
@@ -35,13 +41,24 @@ public class TopDownCamera : MonoBehaviour
             float newZoom = Mathf.Clamp(Camera.main.fieldOfView + scroll * -10f, maxZoom, minZoom);
             Camera.main.fieldOfView = newZoom;
 
-            // Set camera position to top-down view centered on the ground
-            transform.position = new Vector3(ground.transform.position.x, initialCameraHeight, ground.transform.position.z);
-            transform.rotation = Quaternion.Euler(90f, 0f, 0f);
         }
         else
         {
             ground = GameObject.Find("Ground");
         }
+    }
+
+    public void Center()
+    {
+        Camera.main.fieldOfView = minZoom;
+        transform.position = new Vector3(14.5f, 30f, -14.5f);
+        transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+    }
+
+    public void SetSideView()
+    {
+        Camera.main.fieldOfView = minZoom;
+        transform.position = new Vector3(14.5f, 4f, -30.5f);
+        transform.rotation = Quaternion.Euler(30f, 0f, 0f);
     }
 }

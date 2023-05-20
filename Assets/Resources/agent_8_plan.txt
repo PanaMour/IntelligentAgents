@@ -1,3 +1,5 @@
 BEGINPLAN agent number 8
-building B
+building P
+building W
+building V
 ENDPLAN

@@ -1,9 +1,11 @@
 using System;
+using System.Windows.Forms;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Application = UnityEngine.Application;
 
 public class MainMenu : MonoBehaviour
 {
@@ -19,11 +21,13 @@ public class MainMenu : MonoBehaviour
 
     public void OnLoadFileButtonClicked()
     {
-        // Open file selection dialog
-        string selectedFilePath = EditorUtility.OpenFilePanel("Select File", "", "");
+        OpenFileDialog openFileDialog = new OpenFileDialog();
+        openFileDialog.Title = "Select File";
+        openFileDialog.Filter = "All Files|*.*";
 
-        if (!string.IsNullOrEmpty(selectedFilePath))
+        if (openFileDialog.ShowDialog() == DialogResult.OK)
         {
+            string selectedFilePath = openFileDialog.FileName;
             // Store the selected file path
             filePath = selectedFilePath;
             // Update the UI label to display the selected file path

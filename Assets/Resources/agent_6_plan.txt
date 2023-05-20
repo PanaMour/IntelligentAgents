@@ -1,3 +1,5 @@
 BEGINPLAN agent number 6
+building V
+building F
 building B
 ENDPLAN

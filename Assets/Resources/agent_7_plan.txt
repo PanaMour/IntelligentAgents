@@ -1,3 +1,5 @@
 BEGINPLAN agent number 7
 building B
+building F
+building P
 ENDPLAN

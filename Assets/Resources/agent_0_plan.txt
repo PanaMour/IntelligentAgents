@@ -1,3 +1,5 @@
 BEGINPLAN agent number 0
+building P
+building B
 building F
 ENDPLAN
