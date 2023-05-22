@@ -175,8 +175,8 @@ public class AgentController : MonoBehaviour
             }
             foreach (Node node in allNeighbors)
             {
-                Debug.Log("node: " + node.x + " " + node.y);
-                Debug.Log("building: " + buildingPosition.x + " " + buildingPosition.y);
+                //Debug.Log("node: " + node.x + " " + node.y);
+                //Debug.Log("building: " + buildingPosition.x + " " + buildingPosition.y);
                 
                 if (node.symbol == symbol)
                 {
@@ -191,7 +191,7 @@ public class AgentController : MonoBehaviour
                     int agentX = Mathf.RoundToInt(agentPosition.x);
                     int agentY = Mathf.RoundToInt(-agentPosition.z);
 
-                    if(agentX == node.x && agentY == node.y && energyPotStorage > 0)
+                    if(agentX == node.x && agentY == node.y && energy>50 && energyPotStorage > 0)
                     {
                         SellEnergy(agent);
                     }
@@ -231,15 +231,6 @@ public class AgentController : MonoBehaviour
                 Vector3 targetPosition = new Vector3(currentPosition.x, transform.position.y, -currentPosition.y);
                 if (nextNode.symbol == "E")
                 {
-                    nextNode.symbol = " ";
-                    if (energy < 80)
-                    {
-                        energy = Mathf.Min(100, energy + 20);
-                    }
-                    else
-                    {
-                        energyPotStorage += 1;
-                    }
                     
                     GameObject[] energyPots = GameObject.FindGameObjectsWithTag("Energy Pot");
 
@@ -248,20 +239,30 @@ public class AgentController : MonoBehaviour
                         if (energyPot.transform.position.x == currentPosition.x && energyPot.transform.position.z == -currentPosition.y)
                         {
                             energyPot.SetActive(false);
+                            nextNode.symbol = " ";
+                            if (energy < 80)
+                            {
+                                energy = Mathf.Min(100, energy + 20);
+                            }
+                            else
+                            {
+                                energyPotStorage += 1;
+                            }
                         }
                     }
                 }
                 if (nextNode.symbol == "G")
                 {
-                    nextNode.symbol = " ";
-                    gold += 1;
-                    gcount++;
+                    
                     GameObject[] goldObj = GameObject.FindGameObjectsWithTag("Gold");
                     foreach (GameObject gold1 in goldObj)
                     {
                         if (gold1.transform.position.x == currentPosition.x && gold1.transform.position.z == -currentPosition.y)
                         {
                             gold1.SetActive(false);
+                            nextNode.symbol = " ";
+                            gold += 1;
+                            gcount++;
                         }
                     }
                 }
@@ -352,6 +353,7 @@ public class AgentController : MonoBehaviour
         }
         tradedAgents.Add(agent);
         tcount++;
+        agent.GetComponent<AgentController>().tcount++;
     }
 
     private void SellEnergy(GameObject agent)
