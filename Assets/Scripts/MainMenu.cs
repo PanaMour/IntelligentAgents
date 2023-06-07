@@ -57,7 +57,7 @@ public class MainMenu : MonoBehaviour
                 if (digit >= 0 && digit <= 9)
                 {
                     largestSingleDigitNumber = Math.Max(largestSingleDigitNumber, digit);
-                    agentNumLabel.text = largestSingleDigitNumber.ToString();
+                    agentNumLabel.text = (largestSingleDigitNumber + 1).ToString();
                 }
             }
         }
