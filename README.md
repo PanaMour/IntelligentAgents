@@ -1,3 +1,5 @@
 # Intelligent Agents
  
 Welcome to the "Intelligent Agents" project, where we delve into the creation of a virtual world resembling an outdoor city space. This project revolves around a team of intelligent agents who navigate through the city, collecting resources, exchanging information, and completing objectives. The city is filled with buildings, structures and paths, and energy and gold pots are scattered throughout. Each agent possesses perception abilities and a limited energy supply, with the goal of reaching specific buildings in a predefined order. Our agents are equipped with decision-making capabilities and can interact with their environment and other agents to optimize their energy usage and maximize their chances of success. Join us in exploring the intricacies of this dynamic virtual world, where intelligent agents thrive and adapt to accomplish their goals. The project was created using Unity and C#.
+
+[![IntelligentAgents](https://img.youtube.com/vi/PpX9zHB82YI/0.jpg)](https://www.youtube.com/watch?v=PpX9zHB82YI&ab_channel=Pana2525)
